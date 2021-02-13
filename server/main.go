@@ -24,10 +24,14 @@ func forbidden () {
 		Warn("Missing .httpignore, did you want one?")
 		return
 	}
+	Forbidden[".httpignore"] = true
 	list := strings.Split(string(contents), "\n")
 
 	// check for comments (#)
 	for _, val := range(list) {
+		if len(val) == 0 {
+			continue
+		}
 		cmtIdx := strings.Index(val, "#")
 		if cmtIdx > 0 {
 			Forbidden[val[:cmtIdx]] = true
@@ -35,6 +39,8 @@ func forbidden () {
 			Forbidden[val] = true
 		}
 	}
+
+	//Print the list
 	forbiddens := ""
 	for idx, _ := range(Forbidden) {
 		forbiddens += idx + " "
@@ -48,8 +54,8 @@ func parseArgs(args []string) (int) {
 	if len(args) == 2 {
 		port, err = strconv.Atoi(args[1])
 	} else if len(args) == 3 {
-		if args[1][1] == 'v' {
-			Verbosity = 1
+		if args[1][1] == 'V' {
+			Verbosity = 2
 		} else if args[1][1] == 's' {
 			Sudo = true
 		} else {

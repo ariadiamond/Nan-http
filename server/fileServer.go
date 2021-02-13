@@ -29,40 +29,46 @@ func Handle (w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Change this to more prettyness
-	Warn("[GET] " + r.URL.Path)
+	url := r.URL.Path
+	if strings.Count(url, "/") == 1 {
+		url = "./Root" + url
+	} else {
+		url = "." + url
+	}
+
+	Info(r.Method, url)
 
 	// check if the file is allowed
-	if checkForbidden(r.URL.Path) {
+	if checkForbidden(url) {
 		no(w)
 		return
 	}
 
 	// all notes that need to be constructed have a _
-	if strings.Contains(r.URL.Path, "_") {
-		ConstructNotes(w, "." + r.URL.Path)
+	if strings.Contains(url, "_") {
+		ConstructNotes(w, url)
 		return
-	} else if strings.Contains(r.URL.Path, "index") || r.URL.Path[len(r.URL.Path) - 1] == '/' { // index is in index
-		ConstructIndex(w, "." + r.URL.Path)
+	} else if strings.Contains(url, "index") || url[len(url) - 1] == '/' { // index is in index
+		ConstructIndex(w, url)
 		return
 	}
 
 	// Apple asks for special apple favicons, but I just am giving them the regular png
-	if strings.Contains(r.URL.Path, "icon") && strings.Contains(r.URL.Path, ".png"){
-		file, _ := ioutil.ReadFile("favicon.png")
+	if strings.Contains(url, "icon") && strings.Contains(url, ".png"){
+		file, _ := ioutil.ReadFile("Root/favicon.png")
 		w.Header().Set("Content-Type", "image/png")
 		io.WriteString(w, string(file))
 		return
 	}
 
 	// Just a normal file that does not need to be constructed
-	file, err := ioutil.ReadFile("." + r.URL.Path)
+	file, err := ioutil.ReadFile(url)
 	if err != nil { // file not found
 		Whomst(w)
 		return
 	}
 
-	if strings.Contains(r.URL.Path, ".css") {
+	if strings.Contains(url, ".css") {
 		w.Header().Set("Content-Type", "text/css; charset=utf-8")
 	}
 	w.WriteHeader(200)

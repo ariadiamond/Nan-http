@@ -40,8 +40,8 @@ func ConstructIndex (w http.ResponseWriter, url string) {
 		return
 	}
 
-	top, _ := ioutil.ReadFile("head.html")
-	bottom, _ := ioutil.ReadFile("footer.html")
+	top, _ := ioutil.ReadFile("Root/head.html")
+	bottom, _ := ioutil.ReadFile("Root/footer.html")
 	top = bytes.ReplaceAll(top, []byte("<!--TITLE-->"), []byte(getTitle(url)))
 	io.WriteString(w, string(top))
 	io.WriteString(w, string(rest))
@@ -58,8 +58,8 @@ func ConstructNotes (w http.ResponseWriter, url string) {
 	}
 
 	// Build top
-	top, _ := ioutil.ReadFile("head.html")
-	bottom, _ := ioutil.ReadFile("footer.html")
+	top, _ := ioutil.ReadFile("Root/head.html")
+	bottom, _ := ioutil.ReadFile("Root/footer.html")
 	top = bytes.ReplaceAll(top, []byte("<!--TITLE-->"), []byte(getTitle(url) + " Notes"))
 	top = bytes.ReplaceAll(top, []byte("<!--NAV-->"), []byte("<td><a href=\"./\">Index</a></td>"))
 	io.WriteString(w, string(top))
