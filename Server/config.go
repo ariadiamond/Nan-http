@@ -7,10 +7,30 @@ import (
 
 var Config map[string](map[string][]string)
 
-func ParseConfig(folder string) {
+func ReadConfig(url string) ([]string, bool) {
+	lastIndex := strings.LastIndex(url, "/")
+	folder    := url[:lastIndex + 1]
+	file      := url[lastIndex + 1:]
+	folderConfig, exist := Config[folder]
+	if !exist { // If we don't already have it, try to get it
+		if !ParseConfig(folder) {
+			return nil, false
+		}
+		folderConfig, _ = Config[folder]
+	}
+	
+	files, exist := folderConfig[file]
+	if !exist || files == nil {
+		return nil, false
+	}
+	return files, true
+}
+
+func ParseConfig(folder string) (bool) {
 	contents, err := ioutil.ReadFile(folder + ".httpconfig")
-	if err != nil {
-		return
+	if err != nil { // so we don't parse it again
+		Config[folder] = make(map[string][]string)
+		return false
 	}
 
 	list       := strings.Split(string(contents), "\n")
@@ -30,11 +50,11 @@ func ParseConfig(folder string) {
 		url, files := parseLine(line)
 		if len(url) == 0 {
 			Warn("Unable to parse:\n" + line)
-			continue
 		}
 		fileConfig[url] = files
 	}
 	Config[folder] = fileConfig
+	return true
 }
 
 func parseLine(line string) (string, []string) {

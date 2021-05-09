@@ -36,6 +36,7 @@ func Handle (w http.ResponseWriter, r *http.Request) {
 		url = "." + url
 	}
 
+	// print access
 	Info(r.Method, url)
 
 	// check if the file is allowed
@@ -44,16 +45,19 @@ func Handle (w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// all notes that need to be constructed have a _
-	if strings.Contains(url, "_") {
-		ConstructNotes(w, url)
-		return
-	} else if strings.Contains(url, "index") || url[len(url) - 1] == '/' { // index is in index
+	// index is in index	
+	if strings.Contains(url, "index") || url[len(url) - 1] == '/' {
 		ConstructIndex(w, url)
 		return
 	}
-
-	// Apple asks for special apple favicons, but I just am giving them the regular png
+	// all pages we need to construct do not have a . (because name overloading)
+	if !strings.Contains(url, ".") {
+		ConstructNotes(w, url)
+		return
+	}
+	
+	// Apple asks for special apple favicons, but I just am giving them the
+	// regular png
 	if strings.Contains(url, "icon") && strings.Contains(url, ".png"){
 		file, _ := ioutil.ReadFile("Root/favicon.png")
 		w.Header().Set("Content-Type", "image/png")

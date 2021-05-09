@@ -49,12 +49,10 @@ func ConstructIndex (w http.ResponseWriter, url string) {
 }
 
 func ConstructNotes (w http.ResponseWriter, url string) {
-	lastIndex := strings.LastIndex(url, "/")
-	var files []string
-	if strings.Contains(url[lastIndex:], ".") {
-		files = strings.Split(url[lastIndex + 1:], ".")
-	} else {
-		files = []string{url[lastIndex + 1:]}
+	files, exist := ReadConfig(url)
+	if !exist { // we don't have a config for this url
+		Whomst(w)
+		return
 	}
 
 	// Build top
@@ -64,11 +62,12 @@ func ConstructNotes (w http.ResponseWriter, url string) {
 	top = bytes.ReplaceAll(top, []byte("<!--NAV-->"), []byte("<td><a href=\"./\">Index</a></td>"))
 	io.WriteString(w, string(top))
 
+	folder := url[:strings.LastIndex(url, "/") + 1]
 	for _, name := range(files) {
-		rest, err := ioutil.ReadFile(url[:lastIndex] + "/Notes/" + name + ".html")
+		rest, err := ioutil.ReadFile(folder + name)
 		if err != nil {
 			fmt.Println(err.Error())
-			Whomst(w)
+			Whomst(w) // TODO: superfluous 404
 			return
 		}
 		io.WriteString(w, string(rest))
