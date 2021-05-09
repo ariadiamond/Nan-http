@@ -51,7 +51,7 @@ func Handle (w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// all pages we need to construct do not have a . (because name overloading)
-	if !strings.Contains(url, ".") {
+	if strings.LastIndex(url, ".") == 0 {
 		ConstructNotes(w, url)
 		return
 	}

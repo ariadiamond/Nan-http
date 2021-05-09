@@ -84,6 +84,7 @@ func main() {
 	// Starting up and parsing CLIs
 	port := parseArgs(os.Args)
 	forbidden()
+	Config = make(map[string](map[string][]string))
 	Start(port)
 
 	// Actual http server

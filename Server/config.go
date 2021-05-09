@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"strings"
 )
@@ -28,6 +29,7 @@ func ReadConfig(url string) ([]string, bool) {
 
 func ParseConfig(folder string) (bool) {
 	contents, err := ioutil.ReadFile(folder + ".httpconfig")
+	fmt.Println("folder: ", folder)
 	if err != nil { // so we don't parse it again
 		Config[folder] = make(map[string][]string)
 		return false
@@ -51,6 +53,11 @@ func ParseConfig(folder string) (bool) {
 		if len(url) == 0 {
 			Warn("Unable to parse:\n" + line)
 		}
+		if files != nil {
+			fmt.Println("url: ", url, " | files: ", files)
+		} else {
+			fmt.Println("url: ", url, " | files is nil")
+		}
 		fileConfig[url] = files
 	}
 	Config[folder] = fileConfig
@@ -64,7 +71,7 @@ func parseLine(line string) (string, []string) {
 		return "", nil
 	}
 	url   := strings.TrimSpace(line[:splitter])
-	files := strings.Split(line[splitter + 1:], ",")
+	files := strings.Split(line[splitter + 2:], ",")
 	// we need error checking to have non-zero lengths?
 	for idx, val := range(files) {
 		files[idx] = strings.TrimSpace(val)
