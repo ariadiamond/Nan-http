@@ -10,17 +10,10 @@ import (
 )
 
 func getTitle (url string) (string) {
-	if strings.Contains(url, "/2/") {
-		return "Economics 2: Intro to Macroeconomics"
-	} else if strings.Contains(url, "/115/") {
-		return "CSE 115A: Intro to Software Engineering"
-	} else if strings.Contains(url, "/180/") {
-		return "CSE 180: Databases"
-	} else if strings.Contains(url, "/290/") {
-		return "CSE 290S: Resillience in Large Scale Systems"
-	}
+	// TODO
+	
 	//otherwise
-	return "Winter 2021"
+	return "Spring 2021"
 }
 
 func ConstructIndex (w http.ResponseWriter, url string) {

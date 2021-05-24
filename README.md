@@ -1,4 +1,4 @@
-# ![favicon.png](Root/favicon.png) Winter 2021 Server
+# ![favicon.png](Root/favicon.png) Notes Server
 
 ### High level goal
 
@@ -13,10 +13,12 @@ aria likes to have really pretty notes and things, and that is what keeps her sa
 ### To do
 
 **Immediate Server**:
-- [ ] Change constructed file to be if there is a dot (for extensions for prettier URLs)
-- [X] Test scripts
-	- [X] unittest redesign, but pretty
-- [ ] Better URL abstraction from files
+- [X] Change constructed file to be if there is a dot (for extensions for prettier URLs)
+- [ ] Test scripts
+	- [ ] unit tests
+		- [ ] Config
+	- [X] functional
+- [X] Better URL abstraction from files
 - [ ] Support for PUT requests
 
 **Future Server:**

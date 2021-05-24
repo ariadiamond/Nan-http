@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 	"strings"
 )
@@ -29,7 +28,6 @@ func ReadConfig(url string) ([]string, bool) {
 
 func ParseConfig(folder string) (bool) {
 	contents, err := ioutil.ReadFile(folder + ".httpconfig")
-	fmt.Println("folder: ", folder)
 	if err != nil { // so we don't parse it again
 		Config[folder] = make(map[string][]string)
 		return false
@@ -52,11 +50,6 @@ func ParseConfig(folder string) (bool) {
 		url, files := parseLine(line)
 		if len(url) == 0 {
 			Warn("Unable to parse:\n" + line)
-		}
-		if files != nil {
-			fmt.Println("url: ", url, " | files: ", files)
-		} else {
-			fmt.Println("url: ", url, " | files is nil")
 		}
 		fileConfig[url] = files
 	}
