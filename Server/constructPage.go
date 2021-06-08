@@ -11,8 +11,6 @@ import (
 
 func getTitle (url string) (string) {
 	// TODO
-	
-	//otherwise
 	return "Spring 2021"
 }
 
@@ -52,7 +50,7 @@ func ConstructNotes (w http.ResponseWriter, url string) {
 	top, _ := ioutil.ReadFile("Root/head.html")
 	bottom, _ := ioutil.ReadFile("Root/footer.html")
 	top = bytes.ReplaceAll(top, []byte("<!--TITLE-->"), []byte(getTitle(url) + " Notes"))
-	top = bytes.ReplaceAll(top, []byte("<!--NAV-->"), []byte("<td><a href=\"./\">Index</a></td>"))
+	top = bytes.ReplaceAll(top, []byte("<!--NAV-->"), []byte("<td><a href=\"../\">Index</a></td>"))
 	io.WriteString(w, string(top))
 
 	folder := url[:strings.LastIndex(url, "/") + 1]
