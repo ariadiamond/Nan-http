@@ -30,8 +30,13 @@ aria likes to have really pretty notes and things, and that is what keeps her sa
 
 ### Sources
 
+**HTML:**
+- [Mozilla Reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference)
+
+
 **Golang:**
 - The official [website](https://golang.org): [net/http](https://golang.org/pkg/net/http/), [strings](https://golang.org/pkg/strings/)
+- How to do [enums](https://yourbasic.org/golang/iota/) (but they're called iotas)
 
 **Python:** guess who doesn't know python that well
 - Official [documentation](https://docs.python.org/3.9/): [os](https://docs.python.org/3.9/library/os.html), [sys](https://docs.python.org/3.9/library/sys.html)

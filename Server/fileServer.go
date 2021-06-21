@@ -8,11 +8,14 @@ import (
 )
 
 func checkForbidden (url string) (bool) {
-	_, exist := Forbidden[url]
+	aclState, exist := ACL[url]
 	if !exist {
 		return false
 	}
-	return true
+	if (aclState & NEVER) == NEVER || ((aclState & SUREAD) == SUREAD && !Sudo) || ((aclState & SUWRITE) == SUWRITE && !Sudo) {
+		return true
+	}
+	return false
 }
 
 func no (w http.ResponseWriter) {
