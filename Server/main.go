@@ -48,8 +48,9 @@ func parseArgs(args []string) (int) {
 func main() {
 	// Starting up and parsing CLIs
 	port := parseArgs(os.Args)
+
+	Config = make(map[string](map[string]ConfVal))
 	CreateACL()
-	Config = make(map[string](map[string][]string))
 	Start(port)
 
 	// Actual http server

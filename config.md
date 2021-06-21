@@ -2,13 +2,14 @@
 
 Comments can be made using `#`
 
-``path => file1, file2, ...`` with each not including the path to the folder
+``name @ path => file1, file2, ...`` with each not including the path to the folder
 
 Name her ``.httpconfig``
 
 ## Todo
 
-- [ ] Title names
+- [X] Title names
+- [ ] Default names
 - [ ] Regular Expressions
 	- [ ] `?`
 	- [ ] `*`

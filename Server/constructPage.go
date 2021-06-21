@@ -9,11 +9,6 @@ import (
 	"fmt"
 )
 
-func getTitle (url string) (string) {
-	// TODO
-	return "Spring 2021"
-}
-
 func ConstructIndex (w http.ResponseWriter, url string) {
 	var file string
 	if strings.Contains(url, "index.html") {
@@ -33,7 +28,7 @@ func ConstructIndex (w http.ResponseWriter, url string) {
 
 	top, _ := ioutil.ReadFile("Root/head.html")
 	bottom, _ := ioutil.ReadFile("Root/footer.html")
-	top = bytes.ReplaceAll(top, []byte("<!--TITLE-->"), []byte(getTitle(url)))
+	top = bytes.ReplaceAll(top, []byte("<!--TITLE-->"), []byte("Aria's Notes"))
 	io.WriteString(w, string(top))
 	io.WriteString(w, string(rest))
 	io.WriteString(w, string(bottom))
@@ -49,12 +44,12 @@ func ConstructNotes (w http.ResponseWriter, url string) {
 	// Build top
 	top, _ := ioutil.ReadFile("Root/head.html")
 	bottom, _ := ioutil.ReadFile("Root/footer.html")
-	top = bytes.ReplaceAll(top, []byte("<!--TITLE-->"), []byte(getTitle(url) + " Notes"))
+	top = bytes.ReplaceAll(top, []byte("<!--TITLE-->"), []byte(files.title))
 	top = bytes.ReplaceAll(top, []byte("<!--NAV-->"), []byte("<td><a href=\"../\">Index</a></td>"))
 	io.WriteString(w, string(top))
 
 	folder := url[:strings.LastIndex(url, "/") + 1]
-	for _, name := range(files) {
+	for _, name := range(files.files) {
 		rest, err := ioutil.ReadFile(folder + name)
 		if err != nil {
 			fmt.Println(err.Error())
