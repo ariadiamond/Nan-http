@@ -9,20 +9,6 @@ import (
 	"fmt"
 )
 
-func getTitle (url string) (string) {
-	if strings.Contains(url, "/2/") {
-		return "Economics 2: Intro to Macroeconomics"
-	} else if strings.Contains(url, "/115/") {
-		return "CSE 115A: Intro to Software Engineering"
-	} else if strings.Contains(url, "/180/") {
-		return "CSE 180: Databases"
-	} else if strings.Contains(url, "/290/") {
-		return "CSE 290S: Resillience in Large Scale Systems"
-	}
-	//otherwise
-	return "Winter 2021"
-}
-
 func ConstructIndex (w http.ResponseWriter, url string) {
 	var file string
 	if strings.Contains(url, "index.html") {
@@ -42,33 +28,32 @@ func ConstructIndex (w http.ResponseWriter, url string) {
 
 	top, _ := ioutil.ReadFile("Root/head.html")
 	bottom, _ := ioutil.ReadFile("Root/footer.html")
-	top = bytes.ReplaceAll(top, []byte("<!--TITLE-->"), []byte(getTitle(url)))
+	top = bytes.ReplaceAll(top, []byte("<!--TITLE-->"), []byte("Aria's Notes"))
 	io.WriteString(w, string(top))
 	io.WriteString(w, string(rest))
 	io.WriteString(w, string(bottom))
 }
 
 func ConstructNotes (w http.ResponseWriter, url string) {
-	lastIndex := strings.LastIndex(url, "/")
-	var files []string
-	if strings.Contains(url[lastIndex:], ".") {
-		files = strings.Split(url[lastIndex + 1:], ".")
-	} else {
-		files = []string{url[lastIndex + 1:]}
+	files, exist := ReadConfig(url)
+	if !exist { // we don't have a config for this url
+		Whomst(w)
+		return
 	}
 
 	// Build top
 	top, _ := ioutil.ReadFile("Root/head.html")
 	bottom, _ := ioutil.ReadFile("Root/footer.html")
-	top = bytes.ReplaceAll(top, []byte("<!--TITLE-->"), []byte(getTitle(url) + " Notes"))
-	top = bytes.ReplaceAll(top, []byte("<!--NAV-->"), []byte("<td><a href=\"./\">Index</a></td>"))
+	top = bytes.ReplaceAll(top, []byte("<!--TITLE-->"), []byte(files.title))
+	top = bytes.ReplaceAll(top, []byte("<!--NAV-->"), []byte("<td><a href=\"../\">Index</a></td>"))
 	io.WriteString(w, string(top))
 
-	for _, name := range(files) {
-		rest, err := ioutil.ReadFile(url[:lastIndex] + "/Notes/" + name + ".html")
+	folder := url[:strings.LastIndex(url, "/") + 1]
+	for _, name := range(files.files) {
+		rest, err := ioutil.ReadFile(folder + name)
 		if err != nil {
 			fmt.Println(err.Error())
-			Whomst(w)
+			Whomst(w) // TODO: superfluous 404
 			return
 		}
 		io.WriteString(w, string(rest))

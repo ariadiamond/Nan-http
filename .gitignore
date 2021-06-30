@@ -2,15 +2,16 @@
 # I'm not sure if I want to actually post my notes, because while I technically
 # have copyright, but this is based on lectures by professors who are not me
 *.pdf
-/2/
-/115/
-/180/
-/290/
+Lectures/
+
 
 # Cached stuff
 .DS_Store
 __pycache__
 
 # Binaries
-Server/server
-.httpignore
+Server/Server
+.http*
+
+# Certificates
+*.pem

@@ -8,11 +8,14 @@ import (
 )
 
 func checkForbidden (url string) (bool) {
-	_, exist := Forbidden[url]
+	aclState, exist := ACL[url]
 	if !exist {
 		return false
 	}
-	return true
+	if (aclState & NEVER) == NEVER || ((aclState & SUREAD) == SUREAD && !Sudo) || ((aclState & SUWRITE) == SUWRITE && !Sudo) {
+		return true
+	}
+	return false
 }
 
 func no (w http.ResponseWriter) {
@@ -36,6 +39,7 @@ func Handle (w http.ResponseWriter, r *http.Request) {
 		url = "." + url
 	}
 
+	// print access
 	Info(r.Method, url)
 
 	// check if the file is allowed
@@ -44,16 +48,19 @@ func Handle (w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// all notes that need to be constructed have a _
-	if strings.Contains(url, "_") {
-		ConstructNotes(w, url)
-		return
-	} else if strings.Contains(url, "index") || url[len(url) - 1] == '/' { // index is in index
+	// index is in index	
+	if strings.Contains(url, "index") || url[len(url) - 1] == '/' {
 		ConstructIndex(w, url)
 		return
 	}
-
-	// Apple asks for special apple favicons, but I just am giving them the regular png
+	// all pages we need to construct do not have a . (because name overloading)
+	if strings.LastIndex(url, ".") == 0 {
+		ConstructNotes(w, url)
+		return
+	}
+	
+	// Apple asks for special apple favicons, but I just am giving them the
+	// regular png
 	if strings.Contains(url, "icon") && strings.Contains(url, ".png"){
 		file, _ := ioutil.ReadFile("Root/favicon.png")
 		w.Header().Set("Content-Type", "image/png")
