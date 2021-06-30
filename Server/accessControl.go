@@ -14,7 +14,7 @@ const (
 
 func CreateACL () {
 	ACL = make(map[string]int)
-	contents, err := ioutil.ReadFile(".httpignore")
+	contents, err := ioutil.ReadFile(".httpacl")
 	if err != nil {
 		Warn("Missing .httpignore, did you want one?")
 		return
