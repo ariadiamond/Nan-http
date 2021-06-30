@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"errors"
 )
 
 // Globals
@@ -14,31 +15,31 @@ var Verbosity int
 var Sudo      bool
 
 func parseArgs(args []string) (int) {
-	var port int
-	var err  error
-	if len(args) == 2 {
-		port, err = strconv.Atoi(args[1])
-	} else if len(args) == 3 {
-		if args[1][1] == 'V' {
-			Verbosity = 2
-		} else if args[1][1] == 's' {
-			Sudo = true
-		} else {
+	port := 0
+	var err error
+	for i := 1; i < len(args); i++ {
+		if (args[i][0] == '-') { // option
+			switch args[i][1] {
+			case 'p':
+				
+			case 's':
+				Sudo = true
+			case 'v':
+				Verbosity = 1
+			case 'V':
+				Verbosity = 2
+			default:
+				err = errors.New("Invalid arguments")	
+			}
+		} else { // port
+			port, err = strconv.Atoi(args[i])
+		}
+		// print usage if invalid
+		if err != nil {
 			Usage(args[0])
 		}
-		port, err = strconv.Atoi(args[2])
-	} else if len(args) == 4 {
-		if ((args[1][1] != 'v') && (args[2][1] != 'v')) || ((args[1][1] != 's') && (args[2][1] != 's')) {
-			Usage(args[0])
-		}
-		Verbosity = 1
-		Sudo      = true
-		port, err = strconv.Atoi(args[3])
-	} else {
-		Usage(args[0])
 	}
-
-	if err != nil {
+	if port == 0 {
 		Usage(args[0])
 	}
 
@@ -55,5 +56,5 @@ func main() {
 
 	// Actual http server
 	http.HandleFunc("/", Handle)
-	log.Fatal(http.ListenAndServe(":" + strconv.Itoa(port), nil))
+	log.Fatal(http.ListenAndServeTLS(":" + strconv.Itoa(port), "./Server/cert.pem", "./Server/key.pem", nil))
 }

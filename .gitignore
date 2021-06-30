@@ -12,3 +12,6 @@ __pycache__
 # Binaries
 Server/Server
 .http*
+
+# Certificates
+*.pem

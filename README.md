@@ -65,7 +65,7 @@ At the current moment, I'm thinking only have one acl?
 - [Viewport Width](https://www.w3schools.com/html/html_responsive.asp)
 
 **Golang:**
-- The official [website](https://golang.org): [net/http](https://golang.org/pkg/net/http/), [strings](https://golang.org/pkg/strings/)
+- The official [website](https://golang.org): [net/http](https://golang.org/pkg/net/http/), [strings](https://golang.org/pkg/strings/), [errors](https://golang.org/doc/tutorial/handle-errors)
 - How to do [enums](https://yourbasic.org/golang/iota/) (but they're called iotas)
 
 **Python:** guess who doesn't know python that well
