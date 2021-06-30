@@ -11,4 +11,4 @@ __pycache__
 
 # Binaries
 Server/Server
-*/.http*
+.http*
