@@ -2,9 +2,7 @@
 # I'm not sure if I want to actually post my notes, because while I technically
 # have copyright, but this is based on lectures by professors who are not me
 *.pdf
-2*/
-1*/
-
+Lectures/
 
 
 # Cached stuff
@@ -13,4 +11,7 @@ __pycache__
 
 # Binaries
 Server/Server
-.httpignore
+.http*
+
+# Certificates
+*.pem

@@ -46,7 +46,7 @@ func Info (op string, file string) {
 
 func Usage (arg string) {
 	fmt.Fprintf(os.Stderr, "Usage: %s [-vV] port\n", arg)
-	fmt.Fprintf(os.Stderr, "\t-p allow PUT (todo)\n")
+	fmt.Fprintf(os.Stderr, "\t-p allow PUT. This does nothing because it is not implemented.\n")
 	fmt.Fprintf(os.Stderr, "\t-v verbose\n")
 	fmt.Fprintf(os.Stderr, "\t-V very verbose\n")
 	fmt.Fprintf(os.Stderr, "\tport port to run the server on\n")

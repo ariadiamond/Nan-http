@@ -31,9 +31,3 @@ a {
 #topbar td:hover {
 	background-color: #bbbbbb;
 }
-
-#footer {
-	text-align: center;
-	position: fixed;
-	bottom: 0px;
-}
