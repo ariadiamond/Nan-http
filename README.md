@@ -6,11 +6,13 @@ aria likes to have really pretty notes and things, and that is what keeps her sa
 
 # Table Of Contents
 
-- [To do](#To-do)
+- [To do](#TODO)
+- [Config](#Config)
+- [Access Control](#Access-Control)
 - [Sources](#Sources)
 
 ---
-# To do
+# TODO
 
 **Immediate Server**:
 - [X] Change constructed file to be if there is a dot (for extensions for prettier URLs)
@@ -27,6 +29,25 @@ aria likes to have really pretty notes and things, and that is what keeps her sa
 - [ ] Server config and folder specific config
 - [ ] Javascripts for things?
 - [ ] Access control
+
+----
+# Config
+### How to make a config file
+
+Comments can be made using `#`
+
+``name @ path => file1, file2, ...`` with each not including the path to the folder
+
+Name her ``.httpconfig``
+
+### Config TODO
+
+- [X] Title names
+- [ ] Default names
+- [ ] Regular Expressions
+	- [ ] `?`
+	- [ ] `*`
+- [ ] Recursive config
 
 ---
 # Access Control
@@ -47,7 +68,7 @@ Name it `.httpacl`
 
 At the current moment, I'm thinking only have one acl?
 
-### TODO
+### Access Control TODO
 
 - [ ] Regular expressions
 - [ ] Multiple children acls?
