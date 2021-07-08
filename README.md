@@ -29,6 +29,7 @@ aria likes to have really pretty notes and things, and that is what keeps her sa
 - [ ] Server config and folder specific config
 - [ ] Javascripts for things?
 - [ ] Access control
+- [ ] Derive index pages from config files
 
 ----
 # Config
@@ -78,12 +79,13 @@ At the current moment, I'm thinking only have one acl?
 
 **HTML:**
 - [Mozilla Reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference)
+- [Viewport Width](https://www.w3schools.com/html/html_responsive.asp)
 
 **JavaScript:**
 - [Embed JS in HTML](https://www.w3resource.com/javascript/introduction/html-documents.php) *note this is probably not the best source (typos)*
 - [Toggle Element in JS](https://www.w3schools.com/howto/howto_js_toggle_hide_show.asp)
 - [String Function Arguments](https://www.w3schools.com/jsref/event_onclick.asp)
-- [Viewport Width](https://www.w3schools.com/html/html_responsive.asp)
+- [External JS files](https://www.javatpoint.com/how-to-add-javascript-to-html)
 
 **Golang:**
 - The official [website](https://golang.org): [net/http](https://golang.org/pkg/net/http/), [strings](https://golang.org/pkg/strings/), [errors](https://golang.org/doc/tutorial/handle-errors)
