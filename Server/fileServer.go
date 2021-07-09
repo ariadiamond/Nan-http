@@ -5,6 +5,7 @@ import (
 	"io"
 	"io/ioutil"
 	"strings"
+	"os"
 )
 
 func checkForbidden (url string) (bool) {
@@ -27,11 +28,6 @@ func Whomst (w http.ResponseWriter) {
 }
 
 func Handle (w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		w.WriteHeader(405)
-		return
-	}
-
 	url := r.URL.Path
 	if strings.Count(url, "/") == 1 {
 		url = "./Root" + url
@@ -47,14 +43,26 @@ func Handle (w http.ResponseWriter, r *http.Request) {
 		no(w)
 		return
 	}
+	
+	switch(r.Method) {
+	case http.MethodGet:
+		Get(w, url)
+	case http.MethodPut:
+		Put(w, r, url)		
+	default: // unsupported
+		w.WriteHeader(405)
+	}
+}
 
+func Get(w http.ResponseWriter, url string) {
+	
 	// index is in index	
 	if strings.Contains(url, "index") || url[len(url) - 1] == '/' {
 		ConstructIndex(w, url)
 		return
 	}
-	// all pages we need to construct do not have a . (because name overloading)
-	if strings.LastIndex(url, ".") == 0 {
+	// all pages we need to construct do not have a "." in the filename
+	if strings.LastIndex(url, ".") < strings.LastIndex(url, "/") {
 		ConstructNotes(w, url)
 		return
 	}
@@ -81,4 +89,35 @@ func Handle (w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(200)
 
 	io.WriteString(w, string(file))
+}
+
+func Put(w http.ResponseWriter, r *http.Request, url string) {
+	fileStat, err := os.Stat(url)
+	if err != nil {
+		// TODO, find a better way to check for a non-existent file
+		_, err = os.OpenFile(url, os.O_WRONLY | os.O_CREATE | os.O_EXCL, 0644)
+		if err != nil {
+			w.WriteHeader(403)
+			return
+		}
+		fileStat, _ = os.Stat(url)
+	}
+	
+	// Assuming overwriting files usually makes them longer, will add override TODO
+	if r.ContentLength < fileStat.Size() {
+		w.WriteHeader(409) // Conflict
+		return
+	}
+	
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		w.WriteHeader(400)
+		return
+	}
+	err = ioutil.WriteFile(url, body, 0644)
+	if err == nil {
+		w.WriteHeader(200)
+	} else {
+		w.WriteHeader(500)
+	}
 }
