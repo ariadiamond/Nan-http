@@ -8,14 +8,33 @@ import (
 	"os"
 )
 
-func checkForbidden (url string) (bool) {
+// Returns true if the url should NOT be accessed
+// should be called isForbidden (TODO?)
+func checkForbidden (url string, method string) (bool) {
 	aclState, exist := ACL[url]
-	if !exist {
+	if !exist { // If it doesn't exist, we are good
 		return false
 	}
-	if (aclState & NEVER) == NEVER || ((aclState & SUREAD) == SUREAD && !Sudo) || ((aclState & SUWRITE) == SUWRITE && !Sudo) {
+	
+	// It is restricted in some way, let's find out how
+	if (aclState & NEVER) == NEVER {
 		return true
 	}
+	if method == "GET" && ((aclState & SUREAD) == SUREAD && !SuRead) {
+		return true
+	}
+	if method == "PUT" && (aclState & SUWRITE) == SUWRITE && !SuWrite {
+		return true
+	}
+	if method == "PUT" && (aclState & READONLY) == READONLY {
+		Error(method)
+		return true
+	}
+	if method == http.MethodPut && !AllowPut {
+		return true
+	}
+	
+	// We made it past and didn't have any issues
 	return false
 }
 
@@ -39,7 +58,7 @@ func Handle (w http.ResponseWriter, r *http.Request) {
 	Info(r.Method, url)
 
 	// check if the file is allowed
-	if checkForbidden(url) {
+	if checkForbidden(url, r.Method) {
 		no(w)
 		return
 	}

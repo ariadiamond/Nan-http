@@ -45,11 +45,13 @@ func Info (op string, file string) {
 }
 
 func Usage (arg string) {
-	fmt.Fprintf(os.Stderr, "Usage: %s [-vV] port\n", arg)
-	fmt.Fprintf(os.Stderr, "\t-p allow PUT. This does nothing because it is not implemented.\n")
+	fmt.Fprintf(os.Stderr, "Usage: %s [-pvVrw] port\n", arg)
+	fmt.Fprintf(os.Stderr, "\t-p allow PUT requests\n")
 	fmt.Fprintf(os.Stderr, "\t-v verbose\n")
 	fmt.Fprintf(os.Stderr, "\t-V very verbose\n")
-	fmt.Fprintf(os.Stderr, "\tport port to run the server on\n")
+	fmt.Fprintf(os.Stderr, "\t-r Sudo read\n")
+	fmt.Fprintf(os.Stderr, "\t-w Sudo write\n")
+	fmt.Fprintf(os.Stderr, "\t\x1b[4mport\x1b[0m port to run the server on\n")
 	os.Exit(2)
 }
 
@@ -67,9 +69,15 @@ func Start (port int) {
 		fmt.Fprintf(os.Stdout, "Unrecognized%s\n", unset)
 		os.Exit(2)
 	}
-	fmt.Fprintf(os.Stdout, "Sudo mode: ")
-	if Sudo {
+	fmt.Fprintf(os.Stdout, "Sudo Read: ")
+	if SuRead {
 		fmt.Fprintf(os.Stdout, "%senabled, please be careful%s\n", red, unset)
+	} else {
+		fmt.Fprintf(os.Stdout, "%sdisabled%s\n", green, cyan)
+	}
+	fmt.Fprintf(os.Stdout, "Sudo Write: ")
+	if SuWrite {
+		fmt.Fprintf(os.Stdout, "%senabled, please be more careful%s\n", red, unset)
 	} else {
 		fmt.Fprintf(os.Stdout, "%sdisabled%s\n", green, unset)
 	}

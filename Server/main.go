@@ -12,7 +12,9 @@ import (
 
 var ACL       map[string]int
 var Verbosity int
-var Sudo      bool
+var SuRead    bool
+var SuWrite   bool
+var AllowPut  bool
 
 func parseArgs(args []string) (int) {
 	port := 0
@@ -20,10 +22,12 @@ func parseArgs(args []string) (int) {
 	for i := 1; i < len(args); i++ {
 		if (args[i][0] == '-') { // option
 			switch args[i][1] {
-			case 'p': // TODO
-				
-			case 's':
-				Sudo = true
+			case 'p':
+				AllowPut = true
+			case 'r':
+				SuRead = true
+			case 'w':
+				SuWrite = true
 			case 'v':
 				Verbosity = 1
 			case 'V':

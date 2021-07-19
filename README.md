@@ -24,15 +24,16 @@ aria likes to have really pretty notes and things, and that is what keeps her sa
         - [ ] Config
         - [ ] Access Control
         - [ ] PUT
-- [ ] Support for PUT requests
-    - [ ] Override for shorter/equal length files
+- [X] Support for PUT requests
+    - [X] Override for shorter/equal length files
+- [ ] Better cli parsing (support `-Vwr`)
 
 **Future Server:**
 - [ ] Safe PUT requests? (safe folder)
 - [ ] POST requests for tracking something
 - [ ] Server config and folder specific config
 - [ ] Javascripts for things?
-- [ ] Access control
+- [X] Access control
 - [ ] Derive index pages from config files
 
 ----
@@ -82,7 +83,7 @@ At the current moment, I'm thinking only have one acl?
 - [ ] Multiple children acls?
 
 ---
-### Sources
+# Sources
 
 **Markdown Support:**
 - [Pandoc](https://pandoc.org) for conversions
