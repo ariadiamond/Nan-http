@@ -41,6 +41,8 @@ Comments can be made using `#`
 
 Name her ``.httpconfig``
 
+Files with the extension `.mmd` (for MultiMarkDown) will be converted to html when rendering the page. To support this, the command `pandoc` must be installed. At the moment, all other file types are just sent without any processing.
+
 ### Config TODO
 
 - [X] Title names
@@ -71,11 +73,16 @@ At the current moment, I'm thinking only have one acl?
 
 ### Access Control TODO
 
+- [ ] Add Sudo support now writes are enabled
 - [ ] Regular expressions
 - [ ] Multiple children acls?
 
 ---
 ### Sources
+
+**Markdown Support:**
+- [Pandoc](https://pandoc.org) for conversions
+- [MultiMarkdown User guide](https://fletcher.github.io/MultiMarkdown-6/), and the [liscense](https://github.com/fletcher/MultiMarkdown-6#license)
 
 **HTML:**
 - [Mozilla Reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference)

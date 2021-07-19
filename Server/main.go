@@ -20,7 +20,7 @@ func parseArgs(args []string) (int) {
 	for i := 1; i < len(args); i++ {
 		if (args[i][0] == '-') { // option
 			switch args[i][1] {
-			case 'p':
+			case 'p': // TODO
 				
 			case 's':
 				Sudo = true
