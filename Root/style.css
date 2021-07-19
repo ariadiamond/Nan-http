@@ -1,25 +1,33 @@
 body {
-	margin: 2%;
+	margin: 1%;
 	font-size: 110%;
 }
 
 .lecture {
-	margin: 3%;
+	margin: 1%;
+	margin-left: 5%;
 	padding: 1%;
-	border: #000000 solid 5px;
-	border-radius: 20px;
+	border-top: #000000 solid 5px;
+	border-bottom: #000000 solid 4px;
+	border-left: #000000 solid 3px;
+	border-right: #000000 solid 3px;
+	border-radius: 5px;
+	max-width: 40em;
 }
 
 .subelem {
 	margin: 1%;
-	padding: 1%;
-	border: #000000 solid 5px;
-	border-radius: 10px;
+	padding: 2px;
+	border-top: #000000 solid 2px;
+	border-left: #000000 solid 3px;
+	border-right: #000000 solid 3px;
+	border-bottom: #000000 solid 5px;
+	border-radius: 5px;
 }
 
 a {
 	text-decoration: none;
-	font-size: 120%;
+	font-size: 110%;
 }
 
 #topbar {
