@@ -46,6 +46,7 @@ func Info (op string, file string) {
 
 func Usage (arg string) {
 	fmt.Fprintf(os.Stderr, "Usage: %s [-pvVrw] port\n", arg)
+    fmt.Fprintf(os.Stderr, "\t-i run server as HTTP and not HTTPS\n")
 	fmt.Fprintf(os.Stderr, "\t-p allow PUT requests\n")
 	fmt.Fprintf(os.Stderr, "\t-v verbose\n")
 	fmt.Fprintf(os.Stderr, "\t-V very verbose\n")
@@ -55,7 +56,7 @@ func Usage (arg string) {
 	os.Exit(2)
 }
 
-func Start (port int) {
+func Start (port int, insecure bool) {
 	fmt.Fprintf(os.Stdout, "%sStarting server on port %d\n", cyan, port)
 	fmt.Fprintf(os.Stdout, "Verbosity mode: ")
 	switch (Verbosity) {
@@ -69,9 +70,12 @@ func Start (port int) {
 		fmt.Fprintf(os.Stdout, "Unrecognized%s\n", unset)
 		os.Exit(2)
 	}
+    if insecure {
+        fmt.Fprintf(os.Stdout, "%sRunning as HTTP and not HTTPS%s\n", red, cyan)
+    }
 	fmt.Fprintf(os.Stdout, "Sudo Read: ")
 	if SuRead {
-		fmt.Fprintf(os.Stdout, "%senabled, please be careful%s\n", red, unset)
+		fmt.Fprintf(os.Stdout, "%senabled, please be careful%s\n", red, cyan)
 	} else {
 		fmt.Fprintf(os.Stdout, "%sdisabled%s\n", green, cyan)
 	}
