@@ -16,22 +16,18 @@ func CreateACL () {
 	ACL = make(map[string]int)
 	contents, err := ioutil.ReadFile(".httpacl")
 	if err != nil {
-		Warn("Missing .httpignore, did you want one?")
 		return
 	}
 	ACL[".httpignore"] = NEVER
 	state := NEVER // start in a safe state
-	list := strings.Split(string(contents), "\n")
+	list  := strings.Split(string(contents), "\n")
 
-	// check for comments (#)
 	for _, val := range(list) {
         // Remove comments
-        line := val
+        line   := val
 		cmtIdx := strings.Index(val, "#")
-		if cmtIdx > 0 {
+		if cmtIdx >= 0 { // cut out comment. If cmtIdx < 0, there is no comment
 			line = val[:cmtIdx]
-		} else if cmtIdx == 0 { // there is no comment
-			line = ""
 		}
         // If we don't have any data on here
 		if len(line) == 0 {
@@ -43,18 +39,22 @@ func CreateACL () {
         if metaIndex < 0 { // no metacharacter, add to ACL
         	ACL[line] = state
         } else {
-        	state = 0
+        	state = NEVER
         	if strings.Contains(line, "never") {
         		state = NEVER
+        		continue //Skip all other things
         	}
         	if strings.Contains(line, "suRead") {
         		state |= SUREAD
+        		state &= ^NEVER // negation
         	}
         	if strings.Contains(line, "suWrite") {
         		state |= SUWRITE
+        		state &= ^NEVER
         	}
         	if strings.Contains(line, "readOnly") {
         		state |= READONLY
+        		state &= ^NEVER
         	}
         }
         
@@ -62,9 +62,28 @@ func CreateACL () {
 
 	//Print the list
 	forbiddens := ""
-	for idx, _ := range(ACL) {
-		forbiddens += idx + " "
+	suRead     := ""
+	suWrite    := ""
+	readOnly   := ""
+	for idx, val := range(ACL) {
+        if (val & NEVER) > 0 {
+		    forbiddens += idx + " "
+		}
+		if (val & SUREAD) > 0 {
+		    suRead += idx + " "
+		}
+		if (val & SUWRITE) > 0 {
+		    suWrite += idx + " "
+		}
+		if (val & READONLY) > 0 {
+		    readOnly += idx + " "
+		}
 	}
-	Warn("Forbidden list: " + forbiddens)
+	// Print values
+	Warn("Access Control Protections")
+	Warn("Never: " + forbiddens)
+	Warn("Sudo Read: " + suRead)
+	Warn("Sudo Write: " + suWrite)
+	Warn("Read Only: " + readOnly)
 }
 

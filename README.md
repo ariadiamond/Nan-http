@@ -15,20 +15,26 @@ aria likes to have really pretty notes and things, and that is what keeps her sa
 # TODO
 
 **Immediate Server**:
-- [X] Change constructed file to be if there is a dot (for extensions for prettier URLs)
 - [ ] Test scripts
 	- [ ] unit tests
 		- [ ] Config
-	- [X] functional
-- [X] Better URL abstraction from files
-- [ ] Support for PUT requests
+        - [ ] Access Control
+        - [ ] PUT
+	- [ ] functional
+        - [ ] Config
+        - [ ] Access Control
+        - [ ] PUT
+- [X] Support for PUT requests
+    - [X] Override for shorter/equal length files
+- [ ] Better cli parsing (support `-Vwr`)
 
 **Future Server:**
 - [ ] Safe PUT requests? (safe folder)
 - [ ] POST requests for tracking something
 - [ ] Server config and folder specific config
 - [ ] Javascripts for things?
-- [ ] Access control
+- [X] Access control
+- [ ] Derive index pages from config files
 
 ----
 # Config
@@ -39,6 +45,8 @@ Comments can be made using `#`
 ``name @ path => file1, file2, ...`` with each not including the path to the folder
 
 Name her ``.httpconfig``
+
+Files with the extension `.mmd` (for MultiMarkDown) will be converted to html when rendering the page. To support this, the command `pandoc` must be installed. At the moment, all other file types are just sent without any processing.
 
 ### Config TODO
 
@@ -70,24 +78,32 @@ At the current moment, I'm thinking only have one acl?
 
 ### Access Control TODO
 
+- [ ] Add Sudo support now writes are enabled
 - [ ] Regular expressions
 - [ ] Multiple children acls?
 
 ---
-### Sources
+# Sources
+
+**Markdown Support:**
+- [Pandoc](https://pandoc.org) for conversions
+- [MultiMarkdown User guide](https://fletcher.github.io/MultiMarkdown-6/), and the [liscense](https://github.com/fletcher/MultiMarkdown-6#license)
 
 **HTML:**
+- [Status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes)
 - [Mozilla Reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference)
+- [Viewport Width](https://www.w3schools.com/html/html_responsive.asp)
 
 **JavaScript:**
 - [Embed JS in HTML](https://www.w3resource.com/javascript/introduction/html-documents.php) *note this is probably not the best source (typos)*
 - [Toggle Element in JS](https://www.w3schools.com/howto/howto_js_toggle_hide_show.asp)
 - [String Function Arguments](https://www.w3schools.com/jsref/event_onclick.asp)
-- [Viewport Width](https://www.w3schools.com/html/html_responsive.asp)
+- [External JS files](https://www.javatpoint.com/how-to-add-javascript-to-html)
 
 **Golang:**
 - The official [website](https://golang.org): [net/http](https://golang.org/pkg/net/http/), [strings](https://golang.org/pkg/strings/), [errors](https://golang.org/doc/tutorial/handle-errors)
 - How to do [enums](https://yourbasic.org/golang/iota/) (but they're called iotas)
+- Golang supports goto >:) [go by example](https://golangbyexample.com/goto-statement-go/)
 
 **Python:** guess who doesn't know python that well
 - [Official documentation](https://docs.python.org/3.9/): [os](https://docs.python.org/3.9/library/os.html), [sys](https://docs.python.org/3.9/library/sys.html)

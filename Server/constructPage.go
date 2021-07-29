@@ -7,13 +7,12 @@ import (
 	"net/http"
 	"strings"
 	"fmt"
+	"os/exec"
 )
 
 func ConstructIndex (w http.ResponseWriter, url string) {
 	var file string
-	if strings.Contains(url, "index.html") {
-		file = url
-	} else if strings.Contains(url, "index") {
+	if strings.HasSuffix(url, "/index") {
 		file = url + ".html"
 	} else if url[len(url) - 1] == '/' {
 		file = url + "index.html"
@@ -50,7 +49,15 @@ func ConstructNotes (w http.ResponseWriter, url string) {
 
 	folder := url[:strings.LastIndex(url, "/") + 1]
 	for _, name := range(files.files) {
-		rest, err := ioutil.ReadFile(folder + name)
+		var rest []byte
+		var err error
+		// Check type of file we are sending
+		if strings.HasSuffix(name, ".mmd") { // convert from multi markdown
+			cmd := exec.Command("pandoc", "-f", "gfm", "-t", "html", folder + name)
+			rest, err = cmd.Output()
+		} else {
+			rest, err = ioutil.ReadFile(folder + name)
+		}
 		if err != nil {
 			fmt.Println(err.Error())
 			Whomst(w) // TODO: superfluous 404
