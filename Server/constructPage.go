@@ -52,7 +52,7 @@ func ConstructNotes (w http.ResponseWriter, url string) {
 		var rest []byte
 		var err error
 		// Check type of file we are sending
-		if strings.HasSuffix(name, ".mmd") { // convert from multi markdown
+		if strings.HasSuffix(name, ".md") { // convert from multi markdown
 			cmd := exec.Command("pandoc", "-f", "gfm", "-t", "html", folder + name)
 			rest, err = cmd.Output()
 		} else {

@@ -6,11 +6,15 @@ import (
 )
 
 var Config map[string](map[string]ConfVal)
+
 type ConfVal struct {
 	title string
 	files []string
+	scripts []string
+	styles  []string
 }
-var defConf = ConfVal{title: "File Not found", files: nil}
+
+var defConf = ConfVal{title: "File Not found", files: nil, scripts: nil, styles: nil}
 
 func ReadConfig(url string) (ConfVal, bool) {
 	lastIndex := strings.LastIndex(url, "/")
@@ -38,19 +42,19 @@ func ParseConfig(folder string) (bool) {
 		return false
 	}
 
-	list       := strings.Split(string(contents), "\n")
+	list       := strings.Split(string(contents), "*")
 	fileConfig := make(map[string]ConfVal)
 	// check for comments (#)
 	for _, val := range(list) {
-		if len(val) == 0 {
-			continue
-		}
 		cmtIdx := strings.Index(val, "#")
 		var line string
-		if cmtIdx > 0 {
+		if cmtIdx >= 0 {
 			line = val[:cmtIdx]
 		} else if cmtIdx == -1 { //there is no comment
 			line = val
+		}
+		if len(line) == 0 {
+			continue
 		}
 		url, files := parseLine(line)
 		if len(url) == 0 {
@@ -71,7 +75,6 @@ func parseLine(line string) (string, ConfVal) {
 		confVal.title = strings.TrimSpace(line[:endTitle])
 		line = line[endTitle + 1:]
 	}
-	
 	
 	splitter := strings.Index(line, "=>")
 	if splitter == -1 {

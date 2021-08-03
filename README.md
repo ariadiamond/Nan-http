@@ -40,18 +40,33 @@ aria likes to have really pretty notes and things, and that is what keeps her sa
 # Config
 ### How to make a config file
 
-Comments can be made using `#`
+Example:
+```
+Default: [def] # todo
+Class: [class] # todo
+# Comment
+* [name] @ [path] => file1, file2
+          scripts => script.js
+            style => style.css
 
-``name @ path => file1, file2, ...`` with each not including the path to the folder
+* [name] @
+      [path] => file1, file2
+                file3, file4
+       style => style.css ../style.css
+* [path] => file2, file7
+```
 
-Name her ``.httpconfig``
+Default refers to when there is no name for the constructed page (like the last entry in the example). Class is appended to page title, with a delimiter in between: `[name] | [class]`.
 
-Files with the extension `.mmd` (for MultiMarkDown) will be converted to html when rendering the page. To support this, the command `pandoc` must be installed. At the moment, all other file types are just sent without any processing.
+Name it ``.httpconfig``, and place it in the folder you want it.
+
+Files with the extension `.md` (for Github Flavored Markdown) will be converted to html when rendering the page. To support this, the command `pandoc` must be installed. At the moment, all other file types are just sent without any processing.
 
 ### Config TODO
 
-- [X] Title names
-- [ ] Default names
+- [ ] *Multiline config*
+- [ ] **Title names**
+- [ ] **Default names**
 - [ ] Regular Expressions
 	- [ ] `?`
 	- [ ] `*`
@@ -61,10 +76,10 @@ Files with the extension `.mmd` (for MultiMarkDown) will be converted to html wh
 # Access Control
 ### Title characters
 
-- `@never` - These files will never be allowed and always return a 403, regardless of superuser status
-- `@suRead` - Only reading is only possible in superuser mode
-- `@suWrite` - This will not happen for a while
-- `@readOnly` - This requires PUT/POST requests, so will not happen for a while.
+- `@never` - These files will never be allowed and always return `403`, regardless of superuser status
+- `@suRead` - Reading these files is only possible in superuser mode
+- `@suWrite` - Writing these files is only possible in superuser mode
+- `@readOnly` - Puts cannot happen for this path
 
 ### Comments
 
@@ -78,7 +93,7 @@ At the current moment, I'm thinking only have one acl?
 
 ### Access Control TODO
 
-- [ ] Add Sudo support now writes are enabled
+- [X] Add Sudo support now writes are enabled
 - [ ] Regular expressions
 - [ ] Multiple children acls?
 
