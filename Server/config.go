@@ -86,7 +86,7 @@ func parseLine(line string) (string, ConfVal) {
 	scriptRE := regexp.MustCompile(`(?i:scripts)(\s*)(=>)`)
 	scriptSE := scriptRE.FindIndex([]byte(line))
 	
-	styleRE := regexp.MustCompile(`(styles)(\s*)(=>)`)
+	styleRE := regexp.MustCompile(`(?i:styles)(\s*)(=>)`)
 	styleSE := styleRE.FindIndex([]byte(line))
 	
 	// parse actual pieces so we can create the things

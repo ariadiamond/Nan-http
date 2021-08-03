@@ -65,6 +65,7 @@ Files with the extension `.md` (for Github Flavored Markdown) will be converted 
 ### Config TODO
 
 - [X] *Multiline config*
+- [ ] Index config (so that stylesheets can come back)
 - [ ] **Title names**
 - [ ] **Default names**
 - [ ] Regular Expressions
