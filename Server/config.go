@@ -3,6 +3,7 @@ package main
 import (
 	"io/ioutil"
 	"strings"
+	"regexp"
 )
 
 var Config map[string](map[string]ConfVal)
@@ -75,18 +76,64 @@ func parseLine(line string) (string, ConfVal) {
 		confVal.title = strings.TrimSpace(line[:endTitle])
 		line = line[endTitle + 1:]
 	}
-	
-	splitter := strings.Index(line, "=>")
-	if splitter == -1 {
+	urlRE := regexp.MustCompile(`(\s*)(=>)`)
+	urlSE := urlRE.FindIndex([]byte(line))
+	if urlSE == nil {
 		//error
 		return "", confVal
 	}
-	url   := strings.TrimSpace(line[:splitter])
-	files := strings.Split(line[splitter + 2:], ",")
+	// create + parse regex
+	scriptRE := regexp.MustCompile(`(?i:scripts)(\s*)(=>)`)
+	scriptSE := scriptRE.FindIndex([]byte(line))
+	
+	styleRE := regexp.MustCompile(`(styles)(\s*)(=>)`)
+	styleSE := styleRE.FindIndex([]byte(line))
+	
+	// parse actual pieces so we can create the things
+	url := strings.TrimSpace(line[:urlSE[0]])
+	filesEnd := len(line)
+	if scriptSE != nil && scriptSE[0] < filesEnd {
+		filesEnd = scriptSE[0]
+	}
+	if styleSE != nil && styleSE[0] < filesEnd {
+		filesEnd = styleSE[0]
+	}
+	files := strings.Split(line[urlSE[1]:filesEnd], ",")
 	confVal.files = make([]string, len(files))
 	// we need error checking to have non-zero lengths?
 	for idx, val := range(files) {
 		confVal.files[idx] = strings.TrimSpace(val)
 	}
+	
+	if scriptSE != nil {
+		end := len(line)
+		if urlSE[1] > scriptSE[1] {
+			end = urlSE[0]
+		}
+		if styleSE != nil && styleSE[1] > scriptSE[1] && styleSE[0] < end {
+			end = styleSE[0]
+		}
+		scripts := strings.Split(line[scriptSE[1] + 1:end], ",")
+		confVal.scripts = make([]string, len(scripts))
+		for idx, val := range(scripts) {
+			confVal.scripts[idx] = strings.TrimSpace(val)
+		}
+	}
+	
+	if styleSE != nil {
+		end := len(line)
+		if urlSE[1] > styleSE[1] {
+			end = urlSE[0]
+		}
+		if scriptSE != nil && scriptSE[1] > styleSE[1] && scriptSE[0] < end {
+			end = styleSE[0]
+		}
+		styles := strings.Split(line[styleSE[1] + 1:end], ",")
+		confVal.styles = make([]string, len(styles))
+		for idx, val := range(styles) {
+			confVal.styles[idx] = strings.TrimSpace(val)
+		}
+	}
+	
 	return url, confVal
 }

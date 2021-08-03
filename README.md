@@ -64,7 +64,7 @@ Files with the extension `.md` (for Github Flavored Markdown) will be converted 
 
 ### Config TODO
 
-- [ ] *Multiline config*
+- [X] *Multiline config*
 - [ ] **Title names**
 - [ ] **Default names**
 - [ ] Regular Expressions
@@ -116,7 +116,8 @@ At the current moment, I'm thinking only have one acl?
 - [External JS files](https://www.javatpoint.com/how-to-add-javascript-to-html)
 
 **Golang:**
-- The official [website](https://golang.org): [net/http](https://golang.org/pkg/net/http/), [strings](https://golang.org/pkg/strings/), [errors](https://golang.org/doc/tutorial/handle-errors)
+- The official [website](https://golang.org): [net/http](https://golang.org/pkg/net/http/), [strings](https://golang.org/pkg/strings/), [errors](https://golang.org/doc/tutorial/handle-errors), [regexp](https://pkg.go.dev/regexp)
+- Regular expression [syntax](https://github.com/google/re2/wiki/Syntax)
 - How to do [enums](https://yourbasic.org/golang/iota/) (but they're called iotas)
 - Golang supports goto >:) [go by example](https://golangbyexample.com/goto-statement-go/)
 
