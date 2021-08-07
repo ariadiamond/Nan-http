@@ -2,28 +2,28 @@ package main
 
 import (
 	"io/ioutil"
-	"strings"
 	"regexp"
+	"strings"
 )
 
 var Config map[string](map[string]ConfVal)
 
 type ConfVal struct {
-	title string
-	files []string
+	title   string
+	files   []string
 	scripts []string
 	styles  []string
 }
 
 var defConf = ConfVal{title: "File Not found", files: nil, scripts: nil, styles: nil}
 
-func ReadConfig(url string) (ConfVal, bool) {
+func ReadConfig (url string) (ConfVal, bool) {
 	lastIndex := strings.LastIndex(url, "/")
 	folder    := url[:lastIndex + 1]
 	file      := url[lastIndex + 1:]
 	folderConfig, exist := Config[folder]
 	if !exist { // If we don't already have it, try to get it
-		if !ParseConfig(folder) {
+		if !parseConfig(folder) {
 			return defConf, false
 		}
 		folderConfig, _ = Config[folder]
@@ -36,7 +36,7 @@ func ReadConfig(url string) (ConfVal, bool) {
 	return files, true
 }
 
-func ParseConfig(folder string) (bool) {
+func parseConfig (folder string) bool {
 	contents, err := ioutil.ReadFile(folder + ".httpconfig")
 	if err != nil { // so we don't parse it again
 		Config[folder] = make(map[string]ConfVal)
@@ -46,13 +46,12 @@ func ParseConfig(folder string) (bool) {
 	list       := strings.Split(string(contents), "*")
 	fileConfig := make(map[string]ConfVal)
 	// check for comments (#)
-	for _, val := range(list) {
-		cmtIdx := strings.Index(val, "#")
-		var line string
-		if cmtIdx >= 0 {
-			line = val[:cmtIdx]
-		} else if cmtIdx == -1 { //there is no comment
-			line = val
+	for _, line := range(list) {
+		cmtIdx := regexp.MustCompile(`(?m:(#)([[:blank:]]|[[:graph:]])*$)`)
+		for cmtSE := cmtIdx.FindIndex([]byte(line));
+            cmtSE != nil;
+            cmtSE = cmtIdx.FindIndex([]byte(line)) {
+			line = line[:cmtSE[0]] + line[cmtSE[1]:]
 		}
 		if len(line) == 0 {
 			continue
@@ -85,10 +84,10 @@ func parseLine(line string) (string, ConfVal) {
 	// create + parse regex
 	scriptRE := regexp.MustCompile(`(?i:scripts)(\s*)(=>)`)
 	scriptSE := scriptRE.FindIndex([]byte(line))
-	
+
 	styleRE := regexp.MustCompile(`(?i:styles)(\s*)(=>)`)
 	styleSE := styleRE.FindIndex([]byte(line))
-	
+
 	// parse actual pieces so we can create the things
 	url := strings.TrimSpace(line[:urlSE[0]])
 	filesEnd := len(line)
@@ -104,7 +103,7 @@ func parseLine(line string) (string, ConfVal) {
 	for idx, val := range(files) {
 		confVal.files[idx] = strings.TrimSpace(val)
 	}
-	
+
 	if scriptSE != nil {
 		end := len(line)
 		if urlSE[1] > scriptSE[1] {
@@ -119,7 +118,7 @@ func parseLine(line string) (string, ConfVal) {
 			confVal.scripts[idx] = strings.TrimSpace(val)
 		}
 	}
-	
+
 	if styleSE != nil {
 		end := len(line)
 		if urlSE[1] > styleSE[1] {
@@ -134,6 +133,6 @@ func parseLine(line string) (string, ConfVal) {
 			confVal.styles[idx] = strings.TrimSpace(val)
 		}
 	}
-	
+
 	return url, confVal
 }
