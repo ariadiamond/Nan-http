@@ -1,11 +1,11 @@
 package main
 
 import (
-	"net/http"
 	"io"
 	"io/ioutil"
-	"strings"
+	"net/http"
 	"os"
+	"strings"
 )
 
 // Returns true if the url should NOT be accessed
@@ -75,14 +75,13 @@ func Handle (w http.ResponseWriter, r *http.Request) {
 
 func Get(w http.ResponseWriter, url string) {
 	
-	// index is in index	
-	if strings.Contains(url, "index") || url[len(url) - 1] == '/' {
-		ConstructIndex(w, url)
-		return
+	// we have an index
+	if url[len(url) - 1] == '/' {
+		url = url + "index"
 	}
 	// all pages we need to construct do not have a "." in the filename
 	if strings.LastIndex(url, ".") < strings.LastIndex(url, "/") {
-		ConstructNotes(w, url)
+		ConstructPage(w, url)
 		return
 	}
 	

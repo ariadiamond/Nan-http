@@ -31,9 +31,7 @@ aria likes to have really pretty notes and things, and that is what keeps her sa
 **Future Server:**
 - [ ] Safe PUT requests? (safe folder)
 - [ ] POST requests for tracking something
-- [ ] Server config and folder specific config
 - [ ] Javascripts for things?
-- [X] Access control
 - [ ] Derive index pages from config files
 
 ----
@@ -64,8 +62,7 @@ Files with the extension `.md` (for Github Flavored Markdown) will be converted 
 
 ### Config TODO
 
-- [X] *Multiline config*
-- [ ] Index config (so that stylesheets can come back)
+- [X] Index config (so that stylesheets can come back)
 - [ ] **Title names**
 - [ ] **Default names**
 - [ ] Regular Expressions
