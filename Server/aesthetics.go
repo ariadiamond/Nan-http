@@ -1,19 +1,21 @@
 package main
 
 import (
-	"os"
 	"fmt"
+	"os"
 )
 
 // Colors
-// these do not need to be global among the program
-const red     = "\x1b[31m"
-const green   = "\x1b[92m"
-const yellow  = "\x1b[33m"
-const blue    = "\x1b[34m"
-const magenta = "\x1b[35m"
-const cyan    = "\x1b[36m"
-const unset   = "\x1b[0m"
+// these do not need to be global among the program, which is why they are lowercase
+const (
+	red     = "\x1b[31m"
+	green   = "\x1b[92m"
+	yellow  = "\x1b[33m"
+	blue    = "\x1b[34m"
+	magenta = "\x1b[35m"
+	cyan    = "\x1b[36m"
+	unset   = "\x1b[0m"
+)
 
 func Error (str string) {
 	fmt.Fprintf(os.Stderr, "[%sERR%s] : %s\n", red, unset, str)
@@ -45,7 +47,7 @@ func Info (op string, file string) {
 }
 
 func Usage (arg string) {
-	fmt.Fprintf(os.Stderr, "Usage: %s [-pvVrw] port\n", arg)
+	fmt.Fprintf(os.Stderr, "Usage: %s [-v|V] [-prw] port\n", arg)
     fmt.Fprintf(os.Stderr, "\t-i run server as HTTP and not HTTPS\n")
 	fmt.Fprintf(os.Stderr, "\t-p allow PUT requests\n")
 	fmt.Fprintf(os.Stderr, "\t-v verbose\n")

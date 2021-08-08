@@ -1,14 +1,14 @@
 package main;
 
 import (
-    "strings"
     "io/ioutil"
+    "strings"
 )
 
 const ( 
-	NEVER  = 0x1
-	SUREAD = 0x2
-	SUWRITE = 0x4
+	NEVER    = 0x1
+	SUREAD   = 0x2
+	SUWRITE  = 0x4
 	READONLY = 0x8
 )
 
@@ -18,7 +18,7 @@ func CreateACL () {
 	if err != nil {
 		return
 	}
-	ACL[".httpignore"] = NEVER
+	ACL[".httpacl"] = NEVER
 	state := NEVER // start in a safe state
 	list  := strings.Split(string(contents), "\n")
 

@@ -1,11 +1,11 @@
 package main
 
 import (
-	"net/http"
+	"errors"
 	"log"
+	"net/http"
 	"os"
 	"strconv"
-	"errors"
 )
 
 // Globals
