@@ -24,14 +24,12 @@ aria likes to have really pretty notes and things, and that is what keeps her sa
         - [ ] Config
         - [ ] Access Control
         - [ ] PUT
-- [X] Support for PUT requests
-    - [X] Override for shorter/equal length files
 - [ ] Better cli parsing (support `-Vwr`)
+- [ ] Rethink security policy/mechanism. What the heck is it right now?
 
 **Future Server:**
 - [ ] Safe PUT requests? (safe folder)
-- [ ] POST requests for tracking something
-- [ ] Javascripts for things?
+- [ ] POST requests for tracking something (mifilw)
 - [ ] Derive index pages from config files
 
 ----
@@ -43,14 +41,14 @@ Example:
 Default: [def] # todo
 Class: [class] # todo
 # Comment
-* [name] @ [path] => file1, file2
-          scripts => script.js
-            style => style.css
+* [name] @ [path]  => file1, file2
+           scripts => script.js
+           styles  => style.css
 
 * [name] @
       [path] => file1, file2
                 file3, file4
-       style => style.css ../style.css
+      styles => style.css ../style.css
 * [path] => file2, file7
 ```
 
@@ -62,7 +60,6 @@ Files with the extension `.md` (for Github Flavored Markdown) will be converted 
 
 ### Config TODO
 
-- [X] Index config (so that stylesheets can come back)
 - [ ] **Title names**
 - [ ] **Default names**
 - [ ] Regular Expressions
@@ -91,7 +88,6 @@ At the current moment, I'm thinking only have one acl?
 
 ### Access Control TODO
 
-- [X] Add Sudo support now writes are enabled
 - [ ] Regular expressions
 - [ ] Multiple children acls?
 
@@ -103,15 +99,19 @@ At the current moment, I'm thinking only have one acl?
 - [MultiMarkdown User guide](https://fletcher.github.io/MultiMarkdown-6/), and the [liscense](https://github.com/fletcher/MultiMarkdown-6#license)
 
 **HTML:**
-- [Status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes)
+- [Wikipedia: Status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes)
 - [Mozilla Reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference)
-- [Viewport Width](https://www.w3schools.com/html/html_responsive.asp)
+- [w3schools: Viewport Width](https://www.w3schools.com/html/html_responsive.asp)
+
+**CSS:**
+- [MDN: Variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties)
+- [MDN: Media Queries](https://developer.mozilla.org/en-US/docs/Web/CSS/Media_Queries/Using_media_queries)
 
 **JavaScript:**
-- [Embed JS in HTML](https://www.w3resource.com/javascript/introduction/html-documents.php) *note this is probably not the best source (typos)*
-- [Toggle Element in JS](https://www.w3schools.com/howto/howto_js_toggle_hide_show.asp)
-- [String Function Arguments](https://www.w3schools.com/jsref/event_onclick.asp)
-- [External JS files](https://www.javatpoint.com/how-to-add-javascript-to-html)
+- [w3resource: Embed JS in HTML](https://www.w3resource.com/javascript/introduction/html-documents.php) *note this is probably not the best source (typos)*
+- [w3schools: Toggle Element in JS](https://www.w3schools.com/howto/howto_js_toggle_hide_show.asp)
+- [w3schools: String Function Arguments](https://www.w3schools.com/jsref/event_onclick.asp)
+- [Javatpoint: External JS files](https://www.javatpoint.com/how-to-add-javascript-to-html)
 
 **Golang:**
 - The official [website](https://golang.org): [net/http](https://golang.org/pkg/net/http/), [strings](https://golang.org/pkg/strings/), [errors](https://golang.org/doc/tutorial/handle-errors), [regexp](https://pkg.go.dev/regexp)
@@ -122,5 +122,5 @@ At the current moment, I'm thinking only have one acl?
 **Python:** guess who doesn't know python that well
 - [Official documentation](https://docs.python.org/3.9/): [os](https://docs.python.org/3.9/library/os.html), [sys](https://docs.python.org/3.9/library/sys.html)
 - [Classes](https://docs.python.org/3/tutorial/classes.html), [inheritance](https://stackoverflow.com/questions/576169/understanding-python-super-with-init-methods)
-- [Exceptions](https://pythonbasics.org/try-except/)
-- [request](https://requests.readthedocs.io/en/master/)
+- [pythonbasics: Exceptions](https://pythonbasics.org/try-except/)
+- [readthedocs: request](https://requests.readthedocs.io/en/master/)

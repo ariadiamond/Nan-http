@@ -125,7 +125,7 @@ func parseLine(line string) (string, ConfVal) {
 			end = urlSE[0]
 		}
 		if scriptSE != nil && scriptSE[1] > styleSE[1] && scriptSE[0] < end {
-			end = styleSE[0]
+			end = scriptSE[0]
 		}
 		styles := strings.Split(line[styleSE[1] + 1:end], ",")
 		confVal.styles = make([]string, len(styles))

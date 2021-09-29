@@ -21,22 +21,22 @@ func ConstructPage (w http.ResponseWriter, url string) {
 	top, _ := ioutil.ReadFile("Root/head.html")
 	bottom, _ := ioutil.ReadFile("Root/footer.html")
 	top = bytes.ReplaceAll(top, []byte("<!--TITLE-->"), []byte(files.title))
-	top = bytes.ReplaceAll(top, []byte("<!--NAV-->"), []byte("<td><a href=\"index\">Index</a></td>"))
-	
+	top = bytes.ReplaceAll(top, []byte("<!--NAV-->"), []byte("<td><a href=\"../index\">Index</a></td>"))
+
 	scripts := ""
 	for _, val := range(files.scripts) {
-		scripts = scripts + "<script type=\"text/javascript\" src=\"" + val + "\"></script>\n"
+		scripts = scripts + "<script type=\"text/javascript\" src=\"" + val + "\" defer></script>\n"
 	}
 	top = bytes.ReplaceAll(top, []byte("<!--JS-->"), []byte(scripts))
-	
+
 	styles := ""
 	for _, val := range(files.styles) {
 		styles = styles + "<link rel=\"stylesheet\" href=\"" + val + "\">\n"
 	}
 	top = bytes.ReplaceAll(top, []byte("<!--STYLE-->"), []byte(styles))
-	
+
 	io.WriteString(w, string(top))
-	
+
 	for _, name := range(files.files) {
 		var rest []byte
 		var err error
@@ -44,7 +44,7 @@ func ConstructPage (w http.ResponseWriter, url string) {
 		if strings.HasSuffix(name, ".md") { // convert from github flavored markdown
 			cmd := exec.Command("pandoc", "-f", "gfm", "-t", "html", folder + name)
 			rest, err = cmd.Output()
-		} else {
+        } else {
 			rest, err = ioutil.ReadFile(folder + name)
 		}
 		if err != nil {
