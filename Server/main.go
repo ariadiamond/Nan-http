@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"os/signal"
+	"context"
 )
 
 // Globals
@@ -63,9 +65,26 @@ func main() {
 
 	// Actual http server
 	http.HandleFunc("/", Handle)
+	srv := http.Server { Addr: ":" + strconv.Itoa(port) }
+	go ReadCmd(&srv)
+	go func() {
+		sigint := make(chan os.Signal, 1)
+		signal.Notify(sigint, os.Interrupt)
+		<- sigint
+    	Warn("Shutting down server")
+    	err := srv.Shutdown(context.Background())
+    	if err != nil {
+        	Error("Error while shutting down server")
+    	}
+	}()
+	
+	var err error
     if insecure {
-        log.Fatal(http.ListenAndServe(":" + strconv.Itoa(port), nil))
+        err = srv.ListenAndServe()
     } else {
-	    log.Fatal(http.ListenAndServeTLS(":" + strconv.Itoa(port), "./Server/cert.pem", "./Server/key.pem", nil))
+	    err = srv.ListenAndServeTLS("./Server/cert.pem", "./Server/key.pem")
+    }
+    if err != http.ErrServerClosed {
+    	log.Fatal(err)
     }
 }
