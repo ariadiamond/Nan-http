@@ -1,21 +1,40 @@
 package main
 
 import (
-	"net/http"
 	"io"
 	"io/ioutil"
-	"strings"
+	"net/http"
 	"os"
+	"strings"
 )
 
-func checkForbidden (url string) (bool) {
+// Returns true if the url should NOT be accessed
+// should be called isForbidden (TODO?)
+func checkForbidden (url string, method string) (bool) {
 	aclState, exist := ACL[url]
-	if !exist {
+	if !exist { // If it doesn't exist, we are good
 		return false
 	}
-	if (aclState & NEVER) == NEVER || ((aclState & SUREAD) == SUREAD && !Sudo) || ((aclState & SUWRITE) == SUWRITE && !Sudo) {
+
+	// It is restricted in some way, let's find out how
+	if (aclState & NEVER) == NEVER {
 		return true
 	}
+	if method == "GET" && ((aclState & SUREAD) == SUREAD && !SuRead) {
+		return true
+	}
+	if method == "PUT" && (aclState & SUWRITE) == SUWRITE && !SuWrite {
+		return true
+	}
+	if method == "PUT" && (aclState & READONLY) == READONLY {
+		Error(method)
+		return true
+	}
+	if method == http.MethodPut && !AllowPut {
+		return true
+	}
+
+	// We made it past and didn't have any issues
 	return false
 }
 
@@ -39,34 +58,33 @@ func Handle (w http.ResponseWriter, r *http.Request) {
 	Info(r.Method, url)
 
 	// check if the file is allowed
-	if checkForbidden(url) {
+	if checkForbidden(url, r.Method) {
 		no(w)
 		return
 	}
-	
+
 	switch(r.Method) {
 	case http.MethodGet:
 		Get(w, url)
 	case http.MethodPut:
-		Put(w, r, url)		
+		Put(w, r, url)
 	default: // unsupported
 		w.WriteHeader(405)
 	}
 }
 
 func Get(w http.ResponseWriter, url string) {
-	
-	// index is in index	
-	if strings.Contains(url, "index") || url[len(url) - 1] == '/' {
-		ConstructIndex(w, url)
-		return
+
+	// we have an index
+	if url[len(url) - 1] == '/' {
+		url = url + "index"
 	}
 	// all pages we need to construct do not have a "." in the filename
 	if strings.LastIndex(url, ".") < strings.LastIndex(url, "/") {
-		ConstructNotes(w, url)
+		ConstructPage(w, url)
 		return
 	}
-	
+
 	// Apple asks for special apple favicons, but I just am giving them the
 	// regular png
 	if strings.Contains(url, "icon") && strings.Contains(url, ".png"){
@@ -102,13 +120,13 @@ func Put(w http.ResponseWriter, r *http.Request, url string) {
 		}
 		fileStat, _ = os.Stat(url)
 	}
-	
+
 	// Assuming overwriting files usually makes them longer, will add override TODO
 	if r.ContentLength < fileStat.Size() {
 		w.WriteHeader(409) // Conflict
 		return
 	}
-	
+
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(400)

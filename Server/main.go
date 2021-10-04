@@ -1,35 +1,42 @@
 package main
 
 import (
-	"net/http"
+	"errors"
 	"log"
+	"net/http"
 	"os"
 	"strconv"
-	"errors"
 )
 
 // Globals
 
 var ACL       map[string]int
 var Verbosity int
-var Sudo      bool
+var SuRead    bool
+var SuWrite   bool
+var AllowPut  bool
 
-func parseArgs(args []string) (int) {
+func parseArgs(args []string) (int, bool) {
 	port := 0
+    insecure := false
 	var err error
 	for i := 1; i < len(args); i++ {
 		if (args[i][0] == '-') { // option
 			switch args[i][1] {
-			case 'p': // TODO
-				
-			case 's':
-				Sudo = true
+            case 'i':
+                insecure = true
+			case 'p':
+				AllowPut = true
+			case 'r':
+				SuRead = true
+			case 'w':
+				SuWrite = true
 			case 'v':
 				Verbosity = 1
 			case 'V':
 				Verbosity = 2
 			default:
-				err = errors.New("Invalid arguments")	
+				err = errors.New("Invalid arguments")
 			}
 		} else { // port
 			port, err = strconv.Atoi(args[i])
@@ -43,18 +50,22 @@ func parseArgs(args []string) (int) {
 		Usage(args[0])
 	}
 
-	return port
+	return port, insecure
 }
 
 func main() {
 	// Starting up and parsing CLIs
-	port := parseArgs(os.Args)
+	port, insecure := parseArgs(os.Args)
 
 	Config = make(map[string](map[string]ConfVal))
 	CreateACL()
-	Start(port)
+	Start(port, insecure)
 
 	// Actual http server
 	http.HandleFunc("/", Handle)
-	log.Fatal(http.ListenAndServeTLS(":" + strconv.Itoa(port), "./Server/cert.pem", "./Server/key.pem", nil))
+    if insecure {
+        log.Fatal(http.ListenAndServe(":" + strconv.Itoa(port), nil))
+    } else {
+	    log.Fatal(http.ListenAndServeTLS(":" + strconv.Itoa(port), "./Server/cert.pem", "./Server/key.pem", nil))
+    }
 }
