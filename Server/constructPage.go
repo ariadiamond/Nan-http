@@ -2,7 +2,7 @@ package main
 
 import (
 	"bytes"
-	"io"
+	"os"
 	"io/ioutil"
 	"net/http"
 	"os/exec"
@@ -37,7 +37,13 @@ func ConstructPage (w http.ResponseWriter, url string) {
 	}
 	top = bytes.ReplaceAll(top, []byte("<!--STYLE-->"), []byte(styles))
 
-	io.WriteString(w, string(top))
+
+	// Build cache file so we can not superfluous 404
+	tmp, _ := os.CreateTemp(".", "*")
+	defer os.Remove(tmp.Name())
+	
+	
+	tmp.Write(top)
 
 	for _, name := range(files.files) {
 		var rest []byte
@@ -51,12 +57,15 @@ func ConstructPage (w http.ResponseWriter, url string) {
 		}
 		if err != nil {
 			Error(err.Error())
-			Whomst(w) // TODO: superfluous 404
+			Whomst(w)
 			return
 		}
-		io.WriteString(w, string(rest))
+		tmp.Write(rest)
 	}
 
-	io.WriteString(w, string(bottom))
+	tmp.Write(bottom)
+	
+	body, _ := ioutil.ReadFile(tmp.Name())
+	w.Write(body)
 
 }

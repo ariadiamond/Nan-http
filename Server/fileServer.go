@@ -1,7 +1,6 @@
 package main
 
 import (
-	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -90,7 +89,7 @@ func Get(w http.ResponseWriter, url string) {
 	if strings.Contains(url, "icon") && strings.Contains(url, ".png"){
 		file, _ := ioutil.ReadFile("Root/favicon.png")
 		w.Header().Set("Content-Type", "image/png")
-		io.WriteString(w, string(file))
+		w.Write(file)
 		return
 	}
 
@@ -106,7 +105,7 @@ func Get(w http.ResponseWriter, url string) {
 	}
 	w.WriteHeader(200)
 
-	io.WriteString(w, string(file))
+	w.Write(file)
 }
 
 func Put(w http.ResponseWriter, r *http.Request, url string) {
