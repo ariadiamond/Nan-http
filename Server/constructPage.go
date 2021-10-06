@@ -21,7 +21,9 @@ func ConstructPage (w http.ResponseWriter, url string) {
 	top, _ := ioutil.ReadFile("Root/head.html")
 	bottom, _ := ioutil.ReadFile("Root/footer.html")
 	top = bytes.ReplaceAll(top, []byte("<!--TITLE-->"), []byte(files.title))
-	top = bytes.ReplaceAll(top, []byte("<!--NAV-->"), []byte("<td><a href=\"../index\">Index</a></td>"))
+	top = bytes.ReplaceAll(top,
+						   []byte("<!--NAV-->"),
+						   []byte("<td><a href=\"../index\">Index</a></td>"))
 
 	scripts := ""
 	for _, val := range(files.scripts) {

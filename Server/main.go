@@ -24,21 +24,23 @@ func parseArgs(args []string) (int, bool) {
 	var err error
 	for i := 1; i < len(args); i++ {
 		if (args[i][0] == '-') { // option
-			switch args[i][1] {
-            case 'i':
-                insecure = true
-			case 'p':
-				AllowPut = true
-			case 'r':
-				SuRead = true
-			case 'w':
-				SuWrite = true
-			case 'v':
-				Verbosity = 1
-			case 'V':
-				Verbosity = 2
-			default:
-				err = errors.New("Invalid arguments")
+			for j := 1; j < len(args[i]); j++ {
+				switch args[i][j] {
+            	case 'i':
+                	insecure = true
+				case 'p':
+					AllowPut = true
+				case 'r':
+					SuRead = true
+				case 'w':
+					SuWrite = true
+				case 'v':
+					Verbosity = 1
+				case 'V':
+					Verbosity = 2
+				default:
+					err = errors.New("Invalid arguments")
+				}
 			}
 		} else { // port
 			port, err = strconv.Atoi(args[i])

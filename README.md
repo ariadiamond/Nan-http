@@ -24,7 +24,8 @@ aria likes to have really pretty notes and things, and that is what keeps her sa
         - [ ] Config
         - [ ] Access Control
         - [ ] PUT
-- [ ] Better cli parsing (support `-Vwr`)
+- [X] Better cli parsing (support `-Vwr`)
+- [ ] Change command parsing to regexp (with space after "e")
 - [ ] Rethink security policy/mechanism. What the heck is it right now?
 
 **Future Server:**
