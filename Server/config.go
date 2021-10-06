@@ -28,7 +28,7 @@ func ReadConfig (url string) (ConfVal, bool) {
 		}
 		folderConfig, _ = Config[folder]
 	}
-	
+
 	files, exist := folderConfig[file]
 	if !exist {
 		return defConf, false

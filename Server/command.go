@@ -3,7 +3,7 @@ package main
 import (
     "os" // Stdin
     "fmt"
-    "strings"
+    "regexp"
     "net/http"
 )
 
@@ -19,17 +19,17 @@ func ReadCmd (srv *http.Server) {
         if err != nil {
             fmt.Print("Error!\n")
         }
-        bStr := string(buff)
-        if strings.Contains(bStr, "e") || strings.Contains(bStr, "exit") {
+        exitRE := regexp.MustCompile(`(\s)*?(?i:e|exit)(\s)+?`)
+        if exitRE.FindIndex(buff) != nil {
             // exit
             process, _ := os.FindProcess(os.Getpid())
             process.Signal(os.Interrupt)
             return
         }
-        if strings.Contains(bStr, "r") || strings.Contains(bStr, "reset") {
+        resetRE := regexp.MustCompile(`(\s)*?(?i:r|reset)(\s)+?`)
+        if resetRE.FindIndex(buff) != nil {
             Config = make(map[string](map[string]ConfVal))
             Warn("Reset Config")
-    
         }
     }
 }
