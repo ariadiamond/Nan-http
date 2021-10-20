@@ -1,10 +1,10 @@
 package main
 
 import (
-    "os" // Stdin
     "fmt"
-    "regexp"
     "net/http"
+    "os"
+    "regexp"
 )
 
 const (
@@ -13,7 +13,7 @@ const (
 
 
 func ReadCmd (srv *http.Server) {
-    for ;; {
+    for ;; { // make this an infinite loop to read any commands that come in
         buff := make([]byte, BUFF_SIZE)
         _, err := os.Stdin.Read(buff)
         if err != nil {

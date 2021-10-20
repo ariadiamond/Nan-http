@@ -1,138 +1,138 @@
 package main
 
 import (
-	"io/ioutil"
-	"regexp"
-	"strings"
+    "io/ioutil"
+    "regexp"
+    "strings"
 )
 
 var Config map[string](map[string]ConfVal)
 
 type ConfVal struct {
-	title   string
-	files   []string
-	scripts []string
-	styles  []string
+    title   string
+    files   []string
+    scripts []string
+    styles  []string
 }
 
 var defConf = ConfVal{title: "File Not found", files: nil, scripts: nil, styles: nil}
 
 func ReadConfig (url string) (ConfVal, bool) {
-	lastIndex := strings.LastIndex(url, "/")
-	folder    := url[:lastIndex + 1]
-	file      := url[lastIndex + 1:]
-	folderConfig, exist := Config[folder]
-	if !exist { // If we don't already have it, try to get it
-		if !parseConfig(folder) {
-			return defConf, false
-		}
-		folderConfig, _ = Config[folder]
-	}
+    lastIndex := strings.LastIndex(url, "/")
+    folder    := url[:lastIndex + 1]
+    file      := url[lastIndex + 1:]
+    folderConfig, exist := Config[folder]
+    if !exist { // If we don't already have it, try to get it
+        if !parseConfig(folder) {
+            return defConf, false
+        }
+        folderConfig, _ = Config[folder]
+    }
 
-	files, exist := folderConfig[file]
-	if !exist {
-		return defConf, false
-	}
-	return files, true
+    files, exist := folderConfig[file]
+    if !exist {
+        return defConf, false
+    }
+    return files, true
 }
 
 func parseConfig (folder string) bool {
-	contents, err := ioutil.ReadFile(folder + ".httpconfig")
-	if err != nil { // so we don't parse it again
-		Config[folder] = make(map[string]ConfVal)
-		return false
-	}
+    contents, err := ioutil.ReadFile(folder + ".httpconfig")
+    if err != nil { // so we don't parse it again
+        Config[folder] = make(map[string]ConfVal)
+        return false
+    }
 
-	list       := strings.Split(string(contents), "*")
-	fileConfig := make(map[string]ConfVal)
-	// check for comments (#)
-	for _, line := range(list) {
-		cmtIdx := regexp.MustCompile(`(?m:(#)([[:blank:]]|[[:graph:]])*$)`)
-		for cmtSE := cmtIdx.FindIndex([]byte(line));
+    list       := strings.Split(string(contents), "*")
+    fileConfig := make(map[string]ConfVal)
+    // check for comments (#)
+    for _, line := range(list) {
+        cmtIdx := regexp.MustCompile(`(?m:(#)([[:blank:]]|[[:graph:]])*$)`)
+        for cmtSE := cmtIdx.FindIndex([]byte(line));
             cmtSE != nil;
             cmtSE = cmtIdx.FindIndex([]byte(line)) {
-			line = line[:cmtSE[0]] + line[cmtSE[1]:]
-		}
-		if len(line) == 0 {
-			continue
-		}
-		url, files := parseLine(line)
-		if len(url) == 0 {
-			Warn("Unable to parse:\n" + line)
-		}
-		fileConfig[url] = files
-	}
-	Config[folder] = fileConfig
-	return true
+            line = line[:cmtSE[0]] + line[cmtSE[1]:]
+        }
+        if len(line) == 0 {
+            continue
+        }
+        url, files := parseLine(line)
+        if len(url) == 0 {
+            Warn("Unable to parse:\n" + line)
+        }
+        fileConfig[url] = files
+    }
+    Config[folder] = fileConfig
+    return true
 }
 
 func parseLine(line string) (string, ConfVal) {
-	endTitle := strings.Index(line, "@")
-	var confVal ConfVal
-	if endTitle == -1 { // no title (which is okay)
-		confVal.title = "Aria's notes" // TODO: make file specific default
-	} else { // found title
-		confVal.title = strings.TrimSpace(line[:endTitle])
-		line = line[endTitle + 1:]
-	}
-	urlRE := regexp.MustCompile(`(\s*)(=>)`)
-	urlSE := urlRE.FindIndex([]byte(line))
-	if urlSE == nil {
-		//error
-		return "", confVal
-	}
-	// create + parse regex
-	scriptRE := regexp.MustCompile(`(?i:scripts)(\s*)(=>)`)
-	scriptSE := scriptRE.FindIndex([]byte(line))
+    endTitle := strings.Index(line, "@")
+    var confVal ConfVal
+    if endTitle == -1 { // no title (which is okay)
+        confVal.title = "Aria's notes" // TODO: make file specific default
+    } else { // found title
+        confVal.title = strings.TrimSpace(line[:endTitle])
+        line = line[endTitle + 1:]
+    }
+    urlRE := regexp.MustCompile(`(\s*)(=>)`)
+    urlSE := urlRE.FindIndex([]byte(line))
+    if urlSE == nil {
+        //error
+        return "", confVal
+    }
+    // create + parse regex
+    scriptRE := regexp.MustCompile(`(?i:scripts)(\s*)(=>)`)
+    scriptSE := scriptRE.FindIndex([]byte(line))
 
-	styleRE := regexp.MustCompile(`(?i:styles)(\s*)(=>)`)
-	styleSE := styleRE.FindIndex([]byte(line))
+    styleRE := regexp.MustCompile(`(?i:styles)(\s*)(=>)`)
+    styleSE := styleRE.FindIndex([]byte(line))
 
-	// parse actual pieces so we can create the things
-	url := strings.TrimSpace(line[:urlSE[0]])
-	filesEnd := len(line)
-	if scriptSE != nil && scriptSE[0] < filesEnd {
-		filesEnd = scriptSE[0]
-	}
-	if styleSE != nil && styleSE[0] < filesEnd {
-		filesEnd = styleSE[0]
-	}
-	files := strings.Split(line[urlSE[1]:filesEnd], ",")
-	confVal.files = make([]string, len(files))
-	// we need error checking to have non-zero lengths?
-	for idx, val := range(files) {
-		confVal.files[idx] = strings.TrimSpace(val)
-	}
+    // parse actual pieces so we can create the things
+    url := strings.TrimSpace(line[:urlSE[0]])
+    filesEnd := len(line)
+    if scriptSE != nil && scriptSE[0] < filesEnd {
+        filesEnd = scriptSE[0]
+    }
+    if styleSE != nil && styleSE[0] < filesEnd {
+        filesEnd = styleSE[0]
+    }
+    files := strings.Split(line[urlSE[1]:filesEnd], ",")
+    confVal.files = make([]string, len(files))
+    // we need error checking to have non-zero lengths?
+    for idx, val := range(files) {
+        confVal.files[idx] = strings.TrimSpace(val)
+    }
 
-	if scriptSE != nil {
-		end := len(line)
-		if urlSE[1] > scriptSE[1] {
-			end = urlSE[0]
-		}
-		if styleSE != nil && styleSE[1] > scriptSE[1] && styleSE[0] < end {
-			end = styleSE[0]
-		}
-		scripts := strings.Split(line[scriptSE[1] + 1:end], ",")
-		confVal.scripts = make([]string, len(scripts))
-		for idx, val := range(scripts) {
-			confVal.scripts[idx] = strings.TrimSpace(val)
-		}
-	}
+    if scriptSE != nil {
+        end := len(line)
+        if urlSE[1] > scriptSE[1] {
+            end = urlSE[0]
+        }
+        if styleSE != nil && styleSE[1] > scriptSE[1] && styleSE[0] < end {
+            end = styleSE[0]
+        }
+        scripts := strings.Split(line[scriptSE[1] + 1:end], ",")
+        confVal.scripts = make([]string, len(scripts))
+        for idx, val := range(scripts) {
+            confVal.scripts[idx] = strings.TrimSpace(val)
+        }
+    }
 
-	if styleSE != nil {
-		end := len(line)
-		if urlSE[1] > styleSE[1] {
-			end = urlSE[0]
-		}
-		if scriptSE != nil && scriptSE[1] > styleSE[1] && scriptSE[0] < end {
-			end = scriptSE[0]
-		}
-		styles := strings.Split(line[styleSE[1] + 1:end], ",")
-		confVal.styles = make([]string, len(styles))
-		for idx, val := range(styles) {
-			confVal.styles[idx] = strings.TrimSpace(val)
-		}
-	}
+    if styleSE != nil {
+        end := len(line)
+        if urlSE[1] > styleSE[1] {
+            end = urlSE[0]
+        }
+        if scriptSE != nil && scriptSE[1] > styleSE[1] && scriptSE[0] < end {
+            end = scriptSE[0]
+        }
+        styles := strings.Split(line[styleSE[1] + 1:end], ",")
+        confVal.styles = make([]string, len(styles))
+        for idx, val := range(styles) {
+            confVal.styles[idx] = strings.TrimSpace(val)
+        }
+    }
 
-	return url, confVal
+    return url, confVal
 }
