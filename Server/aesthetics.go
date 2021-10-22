@@ -59,6 +59,8 @@ func Usage (arg string) {
 }
 
 func Start (port int, insecure bool) {
+    fmt.Fprintf(os.Stdout, "%sGood Morning!%s\n", green, unset)
+
     fmt.Fprintf(os.Stdout, "%sStarting server on port %d\n", cyan, port)
     fmt.Fprintf(os.Stdout, "Verbosity mode: ")
     switch (Verbosity) {
@@ -87,4 +89,8 @@ func Start (port int, insecure bool) {
     } else {
         fmt.Fprintf(os.Stdout, "%sdisabled%s\n", green, unset)
     }
+}
+
+func End () {
+    fmt.Fprintf(os.Stdout, "\n%sgood night%s\n", green, unset)
 }

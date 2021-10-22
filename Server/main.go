@@ -81,6 +81,7 @@ func main() {
         sigint := make(chan os.Signal, 1)
         signal.Notify(sigint, os.Interrupt)
         <- sigint
+        End()
         Warn("Shutting down server")
         err := srv.Shutdown(context.Background())
         if err != nil {

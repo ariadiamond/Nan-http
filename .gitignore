@@ -11,9 +11,7 @@ Libs/
 .DS_Store
 __pycache__
 
-# Binaries
-Server/Server
+# Server files
+Server/Nan
 .http*
-
-# Certificates
 *.pem
