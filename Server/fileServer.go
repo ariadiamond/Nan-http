@@ -81,9 +81,7 @@ func Handle (w http.ResponseWriter, r *http.Request) {
     }
 }
 
-/* Get handles HTTP GET requests (surprise, I know).
- *
- */
+/* Get handles HTTP GET requests (surprise, I know). */
 func Get(w http.ResponseWriter, url string) {
 
     // we have an index
@@ -123,9 +121,7 @@ func Get(w http.ResponseWriter, url string) {
     w.Write(file)
 }
 
-/* Put handles put requests. At the current moment, it only supports writing new files.
- *
- */
+/* Put handles put requests. At the current moment, it only supports writing new files. */
 func Put (w http.ResponseWriter, r *http.Request, url string) {
     fileStat, err := os.Stat(url)
     if err != nil {
