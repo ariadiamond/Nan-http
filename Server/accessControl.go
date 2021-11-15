@@ -60,7 +60,7 @@ func CreateACL () {
  
     }
 
-    //Print the list
+    //  Print the list
     forbiddens := ""
     suRead     := ""
     suWrite    := ""
