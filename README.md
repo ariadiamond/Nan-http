@@ -10,7 +10,6 @@ This is named after [Nan](https://nookipedia.com/wiki/Nan) from Animal Crossing:
 
 - [To do](#TODO)
 - [Config](#Config)
-- [Access Control](#Access-Control)
 - [Sources](#Sources)
 
 ---
@@ -26,8 +25,6 @@ This is named after [Nan](https://nookipedia.com/wiki/Nan) from Animal Crossing:
         - [ ] Config
         - [ ] Access Control
         - [ ] PUT
-- [X] Better cli parsing (support `-Vwr`)
-- [X] Change command parsing to regexp (with space after "e")
 - [ ] Rethink security policy/mechanism. What the heck is it right now?
 
 **Future Server:**
@@ -69,30 +66,6 @@ Files with the extension `.md` (for Github Flavored Markdown) will be converted 
 	- [ ] `?`
 	- [ ] `*`
 - [ ] Recursive config
-
----
-# Access Control
-### Title characters
-
-- `@never` - These files will never be allowed and always return `403`, regardless of superuser status
-- `@suRead` - Reading these files is only possible in superuser mode
-- `@suWrite` - Writing these files is only possible in superuser mode
-- `@readOnly` - Puts cannot happen for this path
-
-### Comments
-
-Like .httpconfig, these use `#` for comments
-
-### Naming
-
-Name it `.httpacl`
-
-At the current moment, I'm thinking only have one acl?
-
-### Access Control TODO
-
-- [ ] Regular expressions
-- [ ] Multiple children acls?
 
 ---
 # Sources

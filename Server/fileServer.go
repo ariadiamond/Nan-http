@@ -7,37 +7,10 @@ import (
     "strings"
 )
 
-// Returns true if the url should NOT be accessed
-// should be called isForbidden (TODO?)
-func isForbidden (url string, method string) (bool) {
-    aclState, exist := ACL[url]
-    if !exist { // If it doesn't exist, we are good
-        return false
-    }
-
-    // It is restricted in some way, let's find out how
-    if (aclState & NEVER) == NEVER {
-        return true
-    }
-    if method == "GET" && ((aclState & SUREAD) == SUREAD && !SuRead) {
-        return true
-    }
-    if method == "PUT" && (aclState & SUWRITE) == SUWRITE && !SuWrite {
-        return true
-    }
-    if method == "PUT" && (aclState & READONLY) == READONLY {
-        Error(method)
-        return true
-    }
-    if method == http.MethodPut && !AllowPut {
-        return true
-    }
-
-    // We made it past and didn't have any issues
-    return false
-}
-
-/* no handles when the client should not have access to this page, so deny them with a 403 */
+/* no handles when the client should not have access to this page, so deny them with a 403.
+ * At the moment, this is unreachable code, but hopefully will be used again when I have a better
+ * design for limiting access to certain files.
+ */
 func no (w http.ResponseWriter) {
     w.WriteHeader(403) // no (should I make a prettier screen for this?)
     ConstructPage(w, "./Root/accessDenied") // make sure this exists otherwise we will infinite loop
@@ -64,12 +37,6 @@ func Handle (w http.ResponseWriter, r *http.Request) {
     // print access
     Info(r.Method, url)
 
-    // check if the file is allowed
-    if isForbidden(url, r.Method) {
-        no(w)
-        return
-    }
-
     // Based on the method, handle this differently
     switch(r.Method) {
     case http.MethodGet:
@@ -81,9 +48,7 @@ func Handle (w http.ResponseWriter, r *http.Request) {
     }
 }
 
-/* Get handles HTTP GET requests (surprise, I know).
- *
- */
+/* Get handles HTTP GET requests (surprise, I know). */
 func Get(w http.ResponseWriter, url string) {
 
     // we have an index
@@ -123,9 +88,7 @@ func Get(w http.ResponseWriter, url string) {
     w.Write(file)
 }
 
-/* Put handles put requests. At the current moment, it only supports writing new files.
- *
- */
+/* Put handles put requests. At the current moment, it only supports writing new files. */
 func Put (w http.ResponseWriter, r *http.Request, url string) {
     fileStat, err := os.Stat(url)
     if err != nil {

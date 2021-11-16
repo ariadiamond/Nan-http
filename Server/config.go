@@ -15,8 +15,14 @@ type ConfVal struct {
     styles  []string
 }
 
+// defConf exists so that we can return a ConfVal, rather than pointer.
 var defConf = ConfVal{title: "File Not found", files: nil, scripts: nil, styles: nil}
 
+/* Readconfig gets config information for a specific URL to help the page to be displayed. It
+ * essentially makes the Config variable act like a cache, where the file is retrieved if it does
+ * not exist in memory (a cache miss), or returns the data (a cache hit). This also puts config
+ * information in the case of non-existent config files to prevent future failures.
+ */
 func ReadConfig (url string) (ConfVal, bool) {
     lastIndex := strings.LastIndex(url, "/")
     folder    := url[:lastIndex + 1]
@@ -36,6 +42,9 @@ func ReadConfig (url string) (ConfVal, bool) {
     return files, true
 }
 
+/* parseConfig takes a folder, gets the config file and parses it. This function removes comments
+ * and separates entries, but passes the majority of the parsing work to parseLine.
+ */
 func parseConfig (folder string) bool {
     contents, err := ioutil.ReadFile(folder + ".httpconfig")
     if err != nil { // so we don't parse it again
@@ -66,6 +75,7 @@ func parseConfig (folder string) bool {
     return true
 }
 
+/* parseLine does the hard work of parsing an individual entry. */
 func parseLine(line string) (string, ConfVal) {
     endTitle := strings.Index(line, "@")
     var confVal ConfVal
