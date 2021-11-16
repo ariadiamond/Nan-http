@@ -59,13 +59,11 @@ func Info (op string, file string) {
  * allow for flexibility with binary names (not just Nan)
  */
 func Usage (arg string) {
-    fmt.Fprintf(os.Stderr, "Usage: %s [-v|V] [-prw] port\n", arg)
+    fmt.Fprintf(os.Stderr, "Usage: %s [-v|V] [-p] port\n", arg)
     fmt.Fprintf(os.Stderr, "\t-i run server as HTTP and not HTTPS\n")
     fmt.Fprintf(os.Stderr, "\t-p allow PUT requests\n")
     fmt.Fprintf(os.Stderr, "\t-v verbose\n")
     fmt.Fprintf(os.Stderr, "\t-V very verbose\n")
-    fmt.Fprintf(os.Stderr, "\t-r Sudo read\n")
-    fmt.Fprintf(os.Stderr, "\t-w Sudo write\n")
     fmt.Fprintf(os.Stderr, "\t\x1b[4mport\x1b[0m port to run the server on\n")
     os.Exit(2)
 }
@@ -94,18 +92,6 @@ func Start (port int, insecure bool) {
     }
     if insecure {
         fmt.Fprintf(os.Stdout, "%sRunning as HTTP and not HTTPS%s\n", red, cyan)
-    }
-    fmt.Fprintf(os.Stdout, "Sudo Read: ")
-    if SuRead {
-        fmt.Fprintf(os.Stdout, "%senabled, please be careful%s\n", red, cyan)
-    } else {
-        fmt.Fprintf(os.Stdout, "%sdisabled%s\n", green, cyan)
-    }
-    fmt.Fprintf(os.Stdout, "Sudo Write: ")
-    if SuWrite {
-        fmt.Fprintf(os.Stdout, "%senabled, please be more careful%s\n", red, unset)
-    } else {
-        fmt.Fprintf(os.Stdout, "%sdisabled%s\n", green, unset)
     }
 }
 

@@ -12,8 +12,6 @@ import (
 // Globals
 var ACL       map[string]int
 var Verbosity int
-var SuRead    bool
-var SuWrite   bool
 var AllowPut  bool
 
 /* parseArgs reads arguments passed in when initializing the program, and mostly sets global
@@ -33,10 +31,6 @@ func parseArgs(args []string) (int, bool) {
                     insecure = true
                 case 'p':
                     AllowPut = true
-                case 'r':
-                    SuRead = true
-                case 'w':
-                    SuWrite = true
                 case 'v':
                     Verbosity = 1
                 case 'V':
@@ -67,7 +61,6 @@ func main() {
 
     // prep
     Config = make(map[string](map[string]ConfVal))
-    CreateACL()
     Start(port, insecure)
 
     // Set up http server
