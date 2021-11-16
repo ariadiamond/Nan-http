@@ -1,41 +1,77 @@
 body {
-	margin: 1%;
-	font-size: 110%;
+    margin: 1%;
+    font-size: 110%;
 }
 
 .lecture {
-	margin: 1%;
-	margin-left: 5%;
-	padding: 1%;
-	border-top: #000000 solid 5px;
-	border-bottom: #000000 solid 4px;
-	border-left: #000000 solid 3px;
-	border-right: #000000 solid 3px;
-	border-radius: 5px;
-	max-width: 40em;
+    margin: 1%;
+    margin-left: 5%;
+    padding: 1%;
+    border-top: #000000 solid 5px;
+    border-bottom: #000000 solid 4px;
+    border-left: #000000 solid 3px;
+    border-right: #000000 solid 3px;
+    border-radius: 5px;
+    max-width: 40em;
 }
 
 .subelem {
-	margin: 1%;
-	padding: 2px;
-	border-top: #000000 solid 2px;
-	border-left: #000000 solid 3px;
-	border-right: #000000 solid 3px;
-	border-bottom: #000000 solid 5px;
-	border-radius: 5px;
+    margin: 1%;
+    padding: 2px;
+    border-top: #000000 solid 2px;
+    border-left: #000000 solid 3px;
+    border-right: #000000 solid 3px;
+    border-bottom: #000000 solid 5px;
+    border-radius: 5px;
+}
+
+/* For wide browsers (tablets/computers?) */
+@media (min-width: 80em) {
+    .lecture {
+        max-width: 45em;
+        margin-left: 25%;
+    }
+    
+    .subelem {
+        max-width: 50em;
+    }
+    .image {
+        max-width: 50%;
+    }
+
+}
+
+/* Phones */
+@media (max-width: 40em) {
+    .lecture {
+        max-width: 100%;
+        margin-left: 0%;
+    }
+    
+    .subelem {
+        max-width: 100%;
+    }
 }
 
 a {
-	text-decoration: none;
-	font-size: 110%;
+    text-decoration: none;
+    font-size: 110%;
 }
 
 #topbar {
-	padding: 0%;
-	font-size: 150%;
-	height: 10%;
+    padding: 0%;
+    font-size: 150%;
+    height: 10%;
 }
 
 #topbar td:hover {
-	background-color: #bbbbbb;
+    background-color: #bbbbbb;
+}
+
+.confused {
+    color: red;
+}
+
+.comment {
+    color: blue;
 }

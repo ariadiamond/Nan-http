@@ -1,71 +1,89 @@
 package main
 
 import (
-	"bytes"
-	"io"
-	"io/ioutil"
-	"net/http"
-	"strings"
-	"fmt"
-	"os/exec"
+    "bytes"
+    "io/ioutil"
+    "net/http"
+    "os"
+    "os/exec"
+    "strings"
 )
 
-func ConstructIndex (w http.ResponseWriter, url string) {
-	var file string
-	if strings.HasSuffix(url, "/index") {
-		file = url + ".html"
-	} else if url[len(url) - 1] == '/' {
-		file = url + "index.html"
-	} else { // There shouldn't be any cases
-		Error("Construct Index has invalid string" + url)
-	}
-	rest, err := ioutil.ReadFile(file)
-	if err != nil {
-		Whomst(w)
-		return
-	}
+/* ConstructPage takes a URL and active connection, then builds the page (provided it has been
+ * provided in a valid configuration file). It adds style and javascript links as specified, and
+ * adds a header and end of the HTML page so it does not need to be included in each file. This is
+ * useful when the same page is included in multiple pages (such as all notes and a specific topic,
+ * as I use it), and there are not worries about including multiple HTML header sections. 
+ *
+ * This also converts any Markdown files to HTML included in the config, provided Pandoc is
+ * installed. If Pandoc is not installed, any pages with Markdown files will fail to render,
+ * returning a 404 response code.
+ */
+func ConstructPage (w http.ResponseWriter, url string) {
+    files, exist := ReadConfig(url)
+    if !exist { // we don't have a config for this url
+        Whomst(w)
+        return
+    }
+    folder := url[:strings.LastIndex(url, "/") + 1]
 
-	top, _ := ioutil.ReadFile("Root/head.html")
-	bottom, _ := ioutil.ReadFile("Root/footer.html")
-	top = bytes.ReplaceAll(top, []byte("<!--TITLE-->"), []byte("Aria's Notes"))
-	io.WriteString(w, string(top))
-	io.WriteString(w, string(rest))
-	io.WriteString(w, string(bottom))
-}
+    // Build top
+    top, _ := ioutil.ReadFile("Root/head.html")
+    bottom, _ := ioutil.ReadFile("Root/footer.html")
+    top = bytes.ReplaceAll(top, []byte("<!--TITLE-->"), []byte(files.title))
+    top = bytes.ReplaceAll(top,
+                           []byte("<!--NAV-->"),
+                           []byte("<td><a href=\"../index\">Index</a></td>"))
 
-func ConstructNotes (w http.ResponseWriter, url string) {
-	files, exist := ReadConfig(url)
-	if !exist { // we don't have a config for this url
-		Whomst(w)
-		return
-	}
+    // Include JavaScript and CSS files
+    scripts := ""
+    for _, val := range(files.scripts) {
+        scripts = scripts + "<script type=\"application/javascript\" src=\"" + val + "\" defer></script>\n"
+    }
+    top = bytes.ReplaceAll(top, []byte("<!--JS-->"), []byte(scripts))
 
-	// Build top
-	top, _ := ioutil.ReadFile("Root/head.html")
-	bottom, _ := ioutil.ReadFile("Root/footer.html")
-	top = bytes.ReplaceAll(top, []byte("<!--TITLE-->"), []byte(files.title))
-	top = bytes.ReplaceAll(top, []byte("<!--NAV-->"), []byte("<td><a href=\"../\">Index</a></td>"))
-	io.WriteString(w, string(top))
+    styles := ""
+    for _, val := range(files.styles) {
+        styles = styles + "<link rel=\"stylesheet\" href=\"" + val + "\">\n"
+    }
+    top = bytes.ReplaceAll(top, []byte("<!--STYLE-->"), []byte(styles))
 
-	folder := url[:strings.LastIndex(url, "/") + 1]
-	for _, name := range(files.files) {
-		var rest []byte
-		var err error
-		// Check type of file we are sending
-		if strings.HasSuffix(name, ".mmd") { // convert from multi markdown
-			cmd := exec.Command("pandoc", "-f", "gfm", "-t", "html", folder + name)
-			rest, err = cmd.Output()
-		} else {
-			rest, err = ioutil.ReadFile(folder + name)
-		}
-		if err != nil {
-			fmt.Println(err.Error())
-			Whomst(w) // TODO: superfluous 404
-			return
-		}
-		io.WriteString(w, string(rest))
-	}
+    // Build cache file so we can not superfluous 404
+    // TODO, make caches exist until the server is closed, or reset removes it?
+    // TODO would it be too much to ask to check if the file has been changed since creating the
+    //      cached file
+    tmp, _ := os.CreateTemp(".", "*")
+    defer os.Remove(tmp.Name()) // automatically destroys file once returning
 
-	io.WriteString(w, string(bottom))
+    tmp.Write(top)
+
+    // Now iterate through the files in the config to read them and possibly convert
+    for _, name := range(files.files) {
+        var rest []byte
+        var err error
+        // Check type of file we are sending
+        if strings.HasSuffix(name, ".md") { // convert from github flavored markdown
+            cmd := exec.Command("pandoc", "-f", "gfm", "-t", "html", folder + name)
+            rest, err = cmd.Output()
+        } else {
+            rest, err = ioutil.ReadFile(folder + name)
+        }
+
+        if err != nil { // this means the file doesn't exist or the conversion failed
+            Error(err.Error()) // Because this is a config file, we expect it to work, so rather
+                               // than ignoring the failure (such as if someone tried to get a
+                               // non-existent file, we print it.
+            Whomst(w) // 404
+            return
+        }
+        tmp.Write(rest)
+    }
+
+    // finish HTML file
+    tmp.Write(bottom)
+
+    // read the cache file and send it to the client
+    body, _ := ioutil.ReadFile(tmp.Name())
+    w.Write(body)
 
 }
