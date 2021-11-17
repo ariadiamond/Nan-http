@@ -16,4 +16,4 @@ jobs:
         uses: golangci/golangci-lint-action@v2
         with:
           working-directory: Server
-          skip-go-installation
+          skip-go-installation: true
