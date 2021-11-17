@@ -100,3 +100,9 @@ Files with the extension `.md` (for Github Flavored Markdown) will be converted 
 - [Classes](https://docs.python.org/3/tutorial/classes.html), [inheritance](https://stackoverflow.com/questions/576169/understanding-python-super-with-init-methods)
 - [pythonbasics: Exceptions](https://pythonbasics.org/try-except/)
 - [readthedocs: request](https://requests.readthedocs.io/en/master/)
+
+**Github Actions:**
+- [Actions root documentation](https://docs.github.com/en/actions)
+- [Runners](https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners)
+- [jackc/pgx example](https://github.com/jackc/pgx/blob/master/.github/workflows/ci.yml)
+- Setup languages: [go](https://github.com/actions/setup-go), [python](https://github.com/actions/setup-python)

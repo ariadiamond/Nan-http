@@ -1,0 +1,19 @@
+name: Lint
+on:
+  push:
+    paths:
+      - 'Server/**.go'
+permissions:
+  contents: read
+
+jobs:
+  golangci:
+    name: linting time!
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v2
+        with:
+          working-directory: Server
+          skip-go-installation

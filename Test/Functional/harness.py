@@ -11,7 +11,6 @@ class tests(prettyTest):
 			"Get favicon.png"        : [self.file, "favicon.png", "../../Root/favicon.png", True],
 			"Get apple favicon"      : [self.file, "apple-touch-icon.png", "../../Root/favicon.png", True],
 			"Get Home Index"         : [self.construct, "index", ["../../Root/index.html"]],
-			"Get IV Index"           : [self.construct, "Lectures/", ["../../Lectures/index.html"]]
 		}
 
 	# path is the url path for the server and compare it to file

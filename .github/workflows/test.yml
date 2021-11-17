@@ -1,0 +1,33 @@
+name: Test
+on:
+  push:
+    paths:
+      - 'Server/**.go'
+      - 'Test/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    name: Build Server
+    steps:
+      - uses: actions/setup-go@v2
+        with:
+          go-version: '1.17.3'
+        - run: cd Server/
+        - run: go build
+        - run: cd ../
+  
+  test:
+    runs-on: ubuntu-20.04
+    name: Run Functional Tests
+    needs: build
+    steps:
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+      - run: pip3 install requests
+      - run: ./Nan -i 8085 &
+        shell: bash
+      - run: cd Test/Functional/
+      - run: python3 harness.py
+    
