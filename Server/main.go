@@ -10,7 +10,6 @@ import (
 )
 
 // Globals
-var ACL       map[string]int
 var Verbosity int
 var AllowPut  bool
 

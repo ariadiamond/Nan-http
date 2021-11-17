@@ -8,7 +8,7 @@ import (
 )
 
 const (
-    BUFF_SIZE = 4096
+    buff_size = 4096
 )
 
 
@@ -21,12 +21,12 @@ const (
  */
 func ReadCmd (srv *http.Server) {
     for ;; { // make this an infinite loop to read any commands that come in
-        buff := make([]byte, BUFF_SIZE)
+        buff := make([]byte, buff_size)
         _, err := os.Stdin.Read(buff)
         if err != nil {
             fmt.Print("Error!\n")
         }
-        
+
         // exitRE: any amount of space, followed by e or exit, followed by more space
         exitRE := regexp.MustCompile(`(\s)*?(?i:e|exit)(\s)+?`)
         if exitRE.FindIndex(buff) != nil {
@@ -35,7 +35,7 @@ func ReadCmd (srv *http.Server) {
             process.Signal(os.Interrupt)
             return
         }
-        
+
         // resetRE: any amount of space, followed by r or reset, followed by more space 
         resetRE := regexp.MustCompile(`(\s)*?(?i:r|reset)(\s)+?`)
         if resetRE.FindIndex(buff) != nil {
