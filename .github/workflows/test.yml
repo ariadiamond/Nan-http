@@ -1,9 +1,9 @@
 name: Test
-on:
-  push:
-    paths:
-      - 'Server/**.go'
-      - 'Test/**'
+on: [push]
+#  push:
+#    paths:
+#      - 'Server/**.go'
+#      - 'Test/**'
 
 jobs:
   build:
@@ -15,8 +15,11 @@ jobs:
     steps:
       - uses: actions/setup-go@v2
         with:
-          go-version: '1.17.1'
+          go-version: '1.17.3'
       - run: |
+          pwd
+          ls
+          which go
           go build
   
   test:
@@ -31,6 +34,8 @@ jobs:
         with:
           python-version: '3.9'
       - run: |
+         pwd
+         ls
          pip3 install requests
          cd ../../
          .Server/Nan -i 8085 &
