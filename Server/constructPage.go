@@ -52,8 +52,8 @@ func ConstructPage (w http.ResponseWriter, url string) {
     // TODO, make caches exist until the server is closed, or reset removes it?
     // TODO would it be too much to ask to check if the file has been changed since creating the
     //      cached file
-    tmp, _ := os.CreateTemp(".", "*")
-    defer os.Remove(tmp.Name()) // automatically destroys file once returning
+    tmp, _ := os.Create(url + ".nancache")
+    defer os.Remove(url + ".nancache") // automatically destroys file once returning
 
     tmp.Write(top)
 
