@@ -14,14 +14,12 @@ jobs:
         working-directory: Server
         shell: bash
     steps:
+      - uses: actions/checkout@v2
       - uses: actions/setup-go@v2
         with:
           go-version: '1.17.3'
       - run: |
-          ls
-          which go
-          go build
-          pwd
+          go build -v ./...
   
   test:
     runs-on: ubuntu-20.04
