@@ -25,6 +25,14 @@ func ConstructPage (w http.ResponseWriter, url string) {
         Whomst(w)
         return
     }
+    
+    // check if we have a cache before trying to rebuild it
+    cache, err := ioutil.ReadFile(url + ".nancache")
+    if err == nil {
+        w.Write(cache)
+        return
+    }
+    
     folder := url[:strings.LastIndex(url, "/") + 1]
 
     // Build top
@@ -53,7 +61,6 @@ func ConstructPage (w http.ResponseWriter, url string) {
     // TODO would it be too much to ask to check if the file has been changed since creating the
     //      cached file
     tmp, _ := os.Create(url + ".nancache")
-    defer os.Remove(url + ".nancache") // automatically destroys file once returning
 
     tmp.Write(top)
 

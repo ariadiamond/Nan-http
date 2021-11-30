@@ -5,6 +5,7 @@ import (
     "errors"
     "net/http"
     "os"
+    "os/exec"
     "os/signal"
     "strconv"
 )
@@ -68,15 +69,15 @@ func main() {
 
     // Read commands
     go ReadCmd(&srv)
-    
+
     go func() { // anonymous inner function, which allows us to use srv as a variable
         // catch Cmd/Ctrl + C and stop the server gracefully
         sigint := make(chan os.Signal, 1)
         signal.Notify(sigint, os.Interrupt)
         <- sigint // wait on stop before executing further code
-        
+
         End() // This just says good night :)
-        Warn("Shutting down server")
+        exec.Command("find", ".", "-name", "*.nancache", "-delete").Run()
         err := srv.Shutdown(context.Background())
         if err != nil {
             Error("Error while shutting down server")
