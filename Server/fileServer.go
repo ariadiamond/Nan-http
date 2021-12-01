@@ -61,15 +61,6 @@ func Get(w http.ResponseWriter, url string) {
         return
     }
 
-    // Apple asks for special apple favicons, but I just am giving them the regular png
-    // TODO is this too broad and can possibly match on the wrong files?
-    if strings.Contains(url, "icon") && strings.Contains(url, ".png"){
-        file, _ := ioutil.ReadFile("Root/favicon.png")
-        w.Header().Set("Content-Type", "image/png")
-        w.Write(file)
-        return
-    }
-
     // Just a normal file that does not need to be constructed
     file, err := ioutil.ReadFile(url)
     if err != nil { // file not found
@@ -81,7 +72,6 @@ func Get(w http.ResponseWriter, url string) {
         w.Header().Set("Content-Type", "text/css; charset=utf-8")
     } else if strings.HasSuffix(url, ".js") {
         w.Header().Set("Content-Type", "script/javascript; charset=utf-8")
-        // TODO is there another header to add to deal with Firefox's MIME warning
     }
     w.WriteHeader(200)
 
@@ -92,9 +82,6 @@ func Get(w http.ResponseWriter, url string) {
 func Put (w http.ResponseWriter, r *http.Request, url string) {
     fileStat, err := os.Stat(url)
     if err != nil {
-        // TODO is there a better way to check for a non-existent file
-        // TODO having O_EXCL is incorrect, as this only allows us to write new files, and never
-        //      replace files
         // TODO we leak an fd here
         _, err = os.OpenFile(url, os.O_WRONLY | os.O_CREATE | os.O_EXCL, 0644)
         if err != nil {
@@ -104,7 +91,7 @@ func Put (w http.ResponseWriter, r *http.Request, url string) {
         fileStat, _ = os.Stat(url)
     }
 
-    // TODO Assuming overwriting files usually makes them longer, will add override
+    // TODO Assuming overwriting files usually makes them longer, add override
     if r.ContentLength < fileStat.Size() {
         w.WriteHeader(409) // Conflict
         return

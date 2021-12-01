@@ -2,7 +2,6 @@ package main
 
 import (
     "fmt"
-    "net/http"
     "os"
     "regexp"
 )
@@ -19,7 +18,7 @@ const (
  *     - r/reset: clears the config state in memory. This is useful to reflect updates to config
  *       files without having to restart the server.
  */
-func ReadCmd (srv *http.Server) {
+func ReadCmd () {
     for ;; { // make this an infinite loop to read any commands that come in
         buff := make([]byte, buff_size)
         _, err := os.Stdin.Read(buff)

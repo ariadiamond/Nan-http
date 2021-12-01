@@ -13,6 +13,7 @@ import (
 // Globals
 var Verbosity int
 var AllowPut  bool
+var Cache = true
 
 /* parseArgs reads arguments passed in when initializing the program, and mostly sets global
  * variables. It returns the port specified (this is currently still required, although feasibly
@@ -27,6 +28,8 @@ func parseArgs(args []string) (int, bool) {
         if (args[i][0] == '-') { // option
             for j := 1; j < len(args[i]); j++ { // iterate through however many option characters
                 switch args[i][j] {
+                case 'c':
+                    Cache = false
                 case 'i':
                     insecure = true
                 case 'p':
@@ -68,7 +71,7 @@ func main() {
     srv := http.Server { Addr: ":" + strconv.Itoa(port) }
 
     // Read commands
-    go ReadCmd(&srv)
+    go ReadCmd()
 
     go func() { // anonymous inner function, which allows us to use srv as a variable
         // catch Cmd/Ctrl + C and stop the server gracefully

@@ -27,10 +27,12 @@ func ConstructPage (w http.ResponseWriter, url string) {
     }
     
     // check if we have a cache before trying to rebuild it
-    cache, err := ioutil.ReadFile(url + ".nancache")
-    if err == nil {
-        w.Write(cache)
-        return
+    if Cache {
+        cache, err := ioutil.ReadFile(url + ".nancache")
+        if err == nil {
+            w.Write(cache)
+            return
+        }
     }
     
     folder := url[:strings.LastIndex(url, "/") + 1]
@@ -57,10 +59,10 @@ func ConstructPage (w http.ResponseWriter, url string) {
     top = bytes.ReplaceAll(top, []byte("<!--STYLE-->"), []byte(styles))
 
     // Build cache file so we can not superfluous 404
-    // TODO, make caches exist until the server is closed, or reset removes it?
-    // TODO would it be too much to ask to check if the file has been changed since creating the
-    //      cached file
     tmp, _ := os.Create(url + ".nancache")
+    if !Cache {
+        defer os.Remove(url + ".nancache")
+    }
 
     tmp.Write(top)
 

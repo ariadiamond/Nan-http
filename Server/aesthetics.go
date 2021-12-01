@@ -28,7 +28,7 @@ func Error (str string) {
  */
 func Warn (str string) {
     if Verbosity >= 1 {
-        fmt.Fprintf(os.Stdout, "[%sWARN%s]: %s\n", blue, unset, str)
+        fmt.Printf("[%sWARN%s]: %s\n", blue, unset, str)
     }
 }
 
@@ -50,7 +50,7 @@ func Info (op string, file string) {
         default:
             print = cyan + op
         }
-        fmt.Fprintf(os.Stdout, "[%sINFO%s]: %s %s%s\n", blue, unset, print, file, unset)
+        fmt.Printf("[%sINFO%s]: %s %s%s\n", blue, unset, print, file, unset)
     }
 }
 
@@ -59,7 +59,8 @@ func Info (op string, file string) {
  * allow for flexibility with binary names (not just Nan)
  */
 func Usage (arg string) {
-    fmt.Fprintf(os.Stderr, "Usage: %s [-v|V] [-p] port\n", arg)
+    fmt.Fprintf(os.Stderr, "Usage: %s [-v|V] [-pc] port\n", arg)
+    fmt.Fprintf(os.Stderr, "\t-c disable caching of constructed pages\n")
     fmt.Fprintf(os.Stderr, "\t-i run server as HTTP and not HTTPS\n")
     fmt.Fprintf(os.Stderr, "\t-p allow PUT requests\n")
     fmt.Fprintf(os.Stderr, "\t-v verbose\n")
@@ -75,28 +76,34 @@ func Usage (arg string) {
  */
 func Start (port int, insecure bool) {
     // This is a friendly server, just like me :)
-    fmt.Fprintf(os.Stdout, "%sGood Morning!%s\n", green, unset)
+    fmt.Printf("%sGood Morning!%s\n", green, unset)
 
-    fmt.Fprintf(os.Stdout, "%sStarting server on port %d\n", cyan, port)
-    fmt.Fprintf(os.Stdout, "Verbosity mode: ")
+    fmt.Printf("%sStarting server on port %d\n", cyan, port)
+    fmt.Printf("Verbosity mode: ")
     switch (Verbosity) {
     case 0:
-        fmt.Fprintf(os.Stdout, "Errors only\n")
+        fmt.Printf("Errors only\n")
     case 1:
-        fmt.Fprintf(os.Stdout, "Errors and warnings\n")
+        fmt.Printf("Errors and warnings\n")
     case 2:
-        fmt.Fprintf(os.Stdout, "Every endpoint hit\n")
+        fmt.Printf("Every endpoint hit\n")
     default:
-        fmt.Fprintf(os.Stdout, "Unrecognized%s\n", unset)
+        fmt.Printf("Unrecognized%s\n", unset)
         os.Exit(2)
     }
     if insecure {
-        fmt.Fprintf(os.Stdout, "%sRunning as HTTP and not HTTPS%s\n", red, cyan)
+        fmt.Printf("%sRunning as HTTP and not HTTPS%s\n", red, cyan)
+    }
+    fmt.Printf("Caching: ")
+    if Cache {
+        fmt.Printf("%senabled%s\n", green, unset)
+    } else {
+        fmt.Printf("%sdisabled%s\n", red, unset)
     }
 }
 
 /* End just prints good night for when the server is shutting down. Nan is a very friendly server :)
  */
 func End () {
-    fmt.Fprintf(os.Stdout, "\n%sgood night%s\n", green, unset)
+    fmt.Printf("\n%sgood night%s\n", green, unset)
 }

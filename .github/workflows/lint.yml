@@ -1,4 +1,4 @@
-name: Style
+name: Code Style
 on:
   push:
     paths:
@@ -8,7 +8,7 @@ permissions:
 
 jobs:
   golangci:
-    name: linting time!
+    name: Lint Go
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -17,4 +17,4 @@ jobs:
         with:
           working-directory: Server
           skip-go-installation: true
-          args: -E bodyclose -E dupl -E exhaustive -E funlen -E godox -E unparam -E wastedassign -E gosec
+          args: -E bodyclose -E dupl -E exhaustive -E funlen -E godox -E unparam -E wastedassign -E gosec -E goconst
