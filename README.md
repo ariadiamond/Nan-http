@@ -17,17 +17,15 @@ This is named after [Nan](https://nookipedia.com/wiki/Nan) from Animal Crossing:
 
 **Immediate Server**:
 - [ ] Test scripts
-	- [ ] unit tests
-		- [ ] Config
-        - [ ] Access Control
-        - [ ] PUT
+	- [X] unit tests
+		- [X] Config
 	- [ ] functional
         - [ ] Config
-        - [ ] Access Control
         - [ ] PUT
-- [ ] Rethink security policy/mechanism. What the heck is it right now?
+- [ ] Switch to flags package for CLI argument parsing
 
 **Future Server:**
+- [ ] Rethink security policy/mechanism. What the heck is it right now?
 - [ ] Safe PUT requests? (safe folder)
 - [ ] POST requests for tracking something (mifilw)
 - [ ] Derive index pages from config files
