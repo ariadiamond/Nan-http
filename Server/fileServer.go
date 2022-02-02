@@ -82,19 +82,21 @@ func Get(w http.ResponseWriter, url string) {
 func Put (w http.ResponseWriter, r *http.Request, url string) {
     fileStat, err := os.Stat(url)
     if err != nil {
-        // TODO we leak an fd here
-        _, err = os.OpenFile(url, os.O_WRONLY | os.O_CREATE | os.O_EXCL, 0644)
+        fd, err := os.OpenFile(url, os.O_WRONLY | os.O_CREATE | os.O_EXCL, 0644)
         if err != nil {
             w.WriteHeader(403)
             return
         }
+        fd.Close()
         fileStat, _ = os.Stat(url)
     }
 
-    // TODO Assuming overwriting files usually makes them longer, add override
     if r.ContentLength < fileStat.Size() {
-        w.WriteHeader(409) // Conflict
-        return
+        expectation, exist := r.Header["Expect"] // make Expect: 200 the override signal
+        if !exist || (expectation[0] != "200") {
+            w.WriteHeader(409) // conflict
+            return
+        }
     }
 
     body, err := ioutil.ReadAll(r.Body)
